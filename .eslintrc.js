@@ -21,6 +21,7 @@ module.exports = {
   plugins: [
     'react',
   ],
+  parser: 'babel-eslint',
   rules: {
     'semi': [
       'error',
@@ -40,7 +41,9 @@ module.exports = {
     'operator-linebreak': ['error', 'after'],
     'react/jsx-one-expression-per-line': ['off', 'never'],
     'space-before-function-paren': ['off', 'always'],
+    'react/destructuring-assignment': ['off', 'never'],
     'react/jsx-filename-extension': ['warn', {'extensions': ['.js', '.jsx']}],
+    'react/jsx-props-no-spreading': 'off',
   },
   'overrides': [
     {
