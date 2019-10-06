@@ -11,6 +11,7 @@ module.exports = override(
     modifyVars: {
       '@primary-color': '#ef8523',
       '@background-color-light': '#fff',
+      '@table-row-hover-bg': '#f5f5f5',
     },
   }),
 );

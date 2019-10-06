@@ -42,6 +42,7 @@ module.exports = {
     'react/jsx-one-expression-per-line': ['off', 'never'],
     'space-before-function-paren': ['off', 'always'],
     'react/destructuring-assignment': ['off', 'never'],
+    'react/forbid-prop-types': 'off',
     'react/jsx-filename-extension': ['warn', {'extensions': ['.js', '.jsx']}],
     'react/jsx-props-no-spreading': 'off',
   },
