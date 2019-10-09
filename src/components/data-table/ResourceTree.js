@@ -1,63 +1,31 @@
 import React, { Component } from 'react';
 import { Select, Tree } from 'antd';
+import { arborist } from '../../utils/API';
+import { unflatten } from '../../utils/util';
 
 const { Option } = Select;
 const { TreeNode } = Tree;
-const resourceData = [
-  {
-    title: 'CGCI',
-    key: 'CGCI',
-    children: [
-      {
-        title: 'CGCI-0',
-        key: 'CGCI-0',
-      },
-      {
-        title: 'CGCI-1',
-        key: 'CGCI-1',
-      },
-      {
-        title: 'CGCI-2',
-        key: 'CGCI-2',
-      },
-    ],
-  },
-  {
-    title: 'TARGET',
-    key: 'TARGET',
-    children: [
-      { title: 'TARGET-AML', key: 'TARGET-AML' },
-      { title: 'TARGET-ALL-P3', key: 'TARGET-ALL-P3' },
-    ],
-  },
-  {
-    title: 'TCGA',
-    key: 'TCGA',
-    children: [
-      { title: 'TCGA-BRCA', key: 'TCGA-BRCA' },
-      { title: 'TCGA-GBM', key: 'TCGA-GBM' },
-      { title: 'TCGA-LUAD', key: 'TCGA-LUAD' },
-      { title: 'TCGA-IUY', key: 'TCGA-IUY' },
-    ],
-  },
-  {
-    title: 'BEATAML1.0',
-    key: 'BEATAML1.0',
-    children: [
-      { title: 'BEATAML1.0-0', key: 'BEATAML1.0-0' },
-      { title: 'BEATAML1.0-1', key: 'BEATAML1.0-1' },
-    ],
-  },
-];
 
 class ResourceTree extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      expandedKeys: ['TARGET', 'TCGA'],
+      expandedKeys: [],
       autoExpandParent: true,
-      checkedKeys: ['CGCI', 'TCGA'],
+      checkedKeys: [],
+      resourceData: [],
     };
+  }
+
+  componentDidMount = async () => {
+    await this.loadResourceTree();
+  }
+
+  loadResourceTree = async () => {
+    const resp = await arborist.get('/resource');
+    this.setState({
+      resourceData: unflatten(resp.resources),
+    });
   }
 
   onExpand = expandedKeys => {
@@ -76,12 +44,12 @@ class ResourceTree extends Component {
   renderTreeNodes = data => data.map(item => {
     if (item.children) {
       return (
-        <TreeNode title={item.title} key={item.key} dataRef={item}>
+        <TreeNode title={item.name} key={item.path} dataRef={item}>
           {this.renderTreeNodes(item.children)}
         </TreeNode>
       );
     }
-    return <TreeNode key={item.key} {...item} />;
+    return <TreeNode key={item.path} title={item.name} {...item} />;
   });
 
   render () {
@@ -104,7 +72,7 @@ class ResourceTree extends Component {
           onCheck={this.onCheck}
           checkedKeys={this.state.checkedKeys}
         >
-          {this.renderTreeNodes(resourceData)}
+          {this.renderTreeNodes(this.state.resourceData)}
         </Tree>
       </div>
     );
