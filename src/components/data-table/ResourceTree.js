@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Select, Tree } from 'antd';
+import { Icon, Select, Tree } from 'antd';
 import { arborist } from '../../utils/API';
 import { unflatten } from '../../utils/util';
 
@@ -71,6 +71,7 @@ class ResourceTree extends Component {
           autoExpandParent={this.state.autoExpandParent}
           onCheck={this.onCheck}
           checkedKeys={this.state.checkedKeys}
+          switcherIcon={<Icon type="down" />}
         >
           {this.renderTreeNodes(this.state.resourceData)}
         </Tree>
