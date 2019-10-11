@@ -12,6 +12,9 @@ class RowDetail extends Component {
   }
 
   render () {
+    if (!this.props.user) {
+      return (<div />);
+    }
     return (
       <div className="row-detail">
         <div className="user-info">
@@ -42,7 +45,11 @@ RowDetail.propTypes = {
     name: PropTypes.string,
     email: PropTypes.string,
     policies: PropTypes.array,
-  }).isRequired,
+  }),
+};
+
+RowDetail.defaultProps = {
+  user: null,
 };
 
 export default RowDetail;
