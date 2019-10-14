@@ -52,7 +52,6 @@ export default class AddUser extends Component {
         })
         break
       case 4:
-        // TODO upload data ...
         this.setState({
           AddUserModalVisible: false
         })

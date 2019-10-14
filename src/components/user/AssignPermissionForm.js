@@ -1,32 +1,55 @@
 import React from "react"
-import { Form, Icon, Row, Col, Select, Tag } from "antd"
+import { Form, Icon, Row, Col, Select, Tag, TreeSelect } from "antd"
 import PropTypes from 'prop-types'
+import _ from 'lodash'
 
 import "./AssignPermissionForm.less"
+import { arborist } from "../../utils/API"
+import { unflatten } from "../../utils/util"
+
 
 const AssignPermissionForm = Form.create({ name: 'assign_permission_form' })(
   class extends React.Component {
     constructor (props) {
       super(props)
       this.state = {
-        roleOptions: [
-          { label: 'Admin', id: 1 },
-          { label: 'Downloader', id: 2 },
-          { label: 'Submitter', id: 3 },
-          { label: 'Workspace-user', id: 4 },
-        ],
-        resourceOptions: [
-          { label: 'CGCI', id: 1 },
-          { label: 'TCGA-BRCA', id: 2 },
-          { label: 'TCGA-GBM', id: 3 },
-          { label: 'CGA-LUAD', id: 4 },
-          { label: 'TARGET-AML', id: 5 },
-          { label: 'TARGET-ALL-P3', id: 6 },
-        ],
+        roleOptions: [],
+        resourceOptions: [],
         roleData: [],
+        results: [],
       }
     }
 
+
+    renderTreeNodes = (data, disable = false) => data.map(item => {
+      // Removed from the results when the node was disabled
+      if (disable) {
+        _.remove(this.state.results, (r) => {
+          return r.value === item.name
+        })
+      }
+      if (item.children) {
+        let disableChildren
+        if (disable) {
+          // Child nodes recursively disabled
+          disableChildren = true
+        } else {
+          let values = this.state.results.map(v => v.value)
+          disableChildren = values.includes(item.name)
+        }
+        return (
+          <TreeSelect.TreeNode title={ item.name } key={ item.path } value={ item.name } disabled={ disable }>
+            { this.renderTreeNodes(item.children, disableChildren) }
+          </TreeSelect.TreeNode>
+        )
+      }
+      return <TreeSelect.TreeNode key={ item.path } title={ item.name } value={ item.name } { ...item } />
+    })
+
+
+    onChange = results => {
+      this.setState({ results })
+    }
 
     static propTypes = {
       onRef: PropTypes.func,
@@ -36,8 +59,24 @@ const AssignPermissionForm = Form.create({ name: 'assign_permission_form' })(
 
     componentDidMount () {
       this.props.onRef(this)
+      this.loadResourceOptions()
+      this.loadRoleOptions()
     }
 
+
+    loadRoleOptions = async () => {
+      const resp = await arborist.get("/role")
+      this.setState({
+        roleOptions: resp.roles
+      })
+    }
+
+    loadResourceOptions = async () => {
+      const resp = await arborist.get("/resource")
+      this.setState({
+        resourceOptions: unflatten(resp.resources),
+      })
+    }
     handleSubmit = () => {
       return this.state.roleData
     }
@@ -45,7 +84,6 @@ const AssignPermissionForm = Form.create({ name: 'assign_permission_form' })(
     AddRole = () => {
       this.props.form.validateFields((err, values) => {
         if (!err) {
-          console.log(values)
           this.setState({
             roleData: this.state.roleData.concat(values)
           })
@@ -97,7 +135,7 @@ const AssignPermissionForm = Form.create({ name: 'assign_permission_form' })(
                         placeholder="Select role">
                         {
                           filteredRoleOptions.map(r => {
-                            return <Select.Option value={ r.id } key={ r.id }>{ r.label }</Select.Option>
+                            return <Select.Option value={ r.id } key={ r.id }>{ r.id }</Select.Option>
                           })
                         }
                       </Select>,
@@ -111,18 +149,20 @@ const AssignPermissionForm = Form.create({ name: 'assign_permission_form' })(
                         { required: false, type: 'array' },
                       ],
                     })(
-                      <Select
-                        style={ { width: '100%' } }
+                      <TreeSelect
+                        style={ { width: '100%'} }
+                        dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                        allowClear
                         labelInValue
                         showSearch
-                        mode="multiple"
-                        placeholder="Select resource">
-                        {
-                          this.state.resourceOptions.map(r => {
-                            return <Select.Option value={ r.id } key={ r.id }>{ r.label }</Select.Option>
-                          })
-                        }
-                      </Select>,
+                        multiple
+                        treeCheckable
+                        treeCheckStrictly={ true }
+                        onChange={ this.onChange }
+                        placeholder="Select resource (Searchable)">
+                        { this.renderTreeNodes(this.state.resourceOptions) }
+                      </TreeSelect>
+                      ,
                     ) }
                   </Form.Item>
                 </Col>

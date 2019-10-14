@@ -71,6 +71,7 @@ class AddUserModal extends Component {
     let { users } = await this.addUserForm.handleSubmit()
     if (users) {
       this.setState({
+        users: users,
         step: this.state.step + 1
       })
     }
@@ -78,9 +79,9 @@ class AddUserModal extends Component {
 
   handleSubmitSecondStep () {
     let roles = this.assignPermissionForm.handleSubmit()
-    console.log(roles)
     if (roles && roles.length) {
       this.setState({
+        roles: roles,
         step: this.state.step + 1
       })
     }
@@ -89,8 +90,16 @@ class AddUserModal extends Component {
 
   handleSubmitThirdStep () {
     let groups = this.joinGroupsForm.handleSubmit()
-    console.log(groups)
     if (groups && groups.length) {
+      console.group()
+      console.log("Users: ")
+      console.log(this.state.users)
+      console.log("Roles: ")
+      console.log(this.state.roles)
+      console.log("Groups: ")
+      console.log(groups)
+      console.groupEnd()
+      // TODO upload data ...
       this.setState({
         step: this.state.step + 1
       })
