@@ -2,6 +2,8 @@ import React from "react"
 import { Form, Icon, Row, Col, Select } from "antd"
 import PropTypes from 'prop-types'
 
+import { arborist } from '../../utils/API'
+
 import "./JoinGroupsForm.less"
 
 const JoinGroupsForm = Form.create({ name: 'join_groups_form' })(
@@ -9,12 +11,7 @@ const JoinGroupsForm = Form.create({ name: 'join_groups_form' })(
     constructor (props) {
       super(props)
       this.state = {
-        groupOptions: [
-          { label: 'CTDS-Mgmt', id: 1 },
-          { label: 'CTDS-Dev', id: 2 },
-          { label: 'NIAID-Mgmt', id: 3 },
-          { label: 'NiAID-Dev', id: 4 },
-        ],
+        groupOptions: [],
         groupData: [],
       }
     }
@@ -26,6 +23,14 @@ const JoinGroupsForm = Form.create({ name: 'join_groups_form' })(
 
     componentDidMount () {
       this.props.onRef(this)
+      this.loadGroupOptions()
+    }
+
+    loadGroupOptions = async () => {
+      const resp = await arborist.get("/group")
+      this.setState({
+        groupOptions:resp.groups
+      })
     }
 
     handleSubmit = () => {
@@ -59,7 +64,7 @@ const JoinGroupsForm = Form.create({ name: 'join_groups_form' })(
       // Filter the options has added
       const filteredGroupOptions = this.state.groupOptions.filter(o => {
         let keys = this.state.groupData.map(i => i.group.key)
-        return !keys.includes(o.id)
+        return !keys.includes(o.name)
       })
 
       return (
@@ -80,7 +85,7 @@ const JoinGroupsForm = Form.create({ name: 'join_groups_form' })(
                         placeholder="Enter group name keyword">
                         {
                           filteredGroupOptions.map(r => {
-                            return <Select.Option value={ r.id }>{ r.label }</Select.Option>
+                            return <Select.Option value={ r.name }>{ r.name }</Select.Option>
                           })
                         }
                       </Select>,
