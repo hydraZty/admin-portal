@@ -8,6 +8,7 @@ import AssignPermissionForm from "./AssignPermissionForm"
 import JoinGroupsForm from "./JoinGroupsForm"
 
 import './AddUserModal.less'
+import { arborist } from "../../utils/API"
 
 class AddUserModal extends Component {
   constructor (props) {
@@ -15,13 +16,14 @@ class AddUserModal extends Component {
     this.state = {
       step: 1,
       users: [],
-      roles: [],
+      policies: [],
       groups: [],
     }
   }
 
   static propTypes = {
     onRef: PropTypes.func,
+    closeModal: PropTypes.func,
   }
 
   componentDidMount () {
@@ -78,61 +80,79 @@ class AddUserModal extends Component {
   }
 
   handleSubmitSecondStep () {
-    let roles = this.assignPermissionForm.handleSubmit()
-    if (roles && roles.length) {
+    let policies = this.assignPermissionForm.handleSubmit()
+    if (policies && policies.length) {
       this.setState({
-        roles: roles,
+        policies,
         step: this.state.step + 1
       })
     }
   }
 
 
-  handleSubmitThirdStep () {
+  async handleSubmitThirdStep () {
     let groups = this.joinGroupsForm.handleSubmit()
     if (groups && groups.length) {
-      console.group()
-      console.log("Users: ")
-      console.log(this.state.users)
-      console.log("Roles: ")
-      console.log(this.state.roles)
-      console.log("Groups: ")
-      console.log(groups)
-      console.groupEnd()
-      // TODO upload data ...
-      this.setState({
-        step: this.state.step + 1
+
+      let policies = []
+      this.state.policies.map(item => {
+        if (item.resources.length) {
+          item.resources.map(resource => {
+            policies.push({
+              policy: `${resource.value.slice(1).replace(/\//ig, '.')}-${item.role.label}`,
+              resource: resource.label,
+              role: item.role.label
+            })
+          })
+        } else {
+          policies.push({
+            policy: item.role.label,
+            resource: "",
+            role: item.role.label
+          })
+        }
       })
+
+      let content = {
+        users: this.state.users,
+        policies,
+        groups: groups.map(group => group.group.key)
+
+      }
+
+      try {
+        await arborist.post('/users', content)
+        this.props.closeModal()
+      } catch (e) {
+        console.log(e.message)
+        return false
+      }
     }
   }
 
   render () {
+
     return (
-      this.state.step === 1 ?
-        <div className="container">
+      <div>
+        <div className={ `container ${this.state.step !== 1 ? "disabled" : null}` }>
           <Typography.Title level={ 4 }>Step 1. Enter username and email</Typography.Title>
-          <div className="">
-            <AddUserForm
-              onRef={ this.onRefAddUserForm }
-            />
-          </div>
+          <AddUserForm
+            onRef={ this.onRefAddUserForm }
+          />
         </div>
-        : this.state.step === 2 ?
-        <div className="container">
+        <div className={ `container ${this.state.step !== 2 ? "disabled" : null}` }>
           <Typography.Title level={ 4 }>Step 2. Assign Permissions to new users</Typography.Title>
           <AssignPermissionForm
             onRef={ this.onRefAssignPermissionForm }
           />
         </div>
-        : this.state.step === 3 ?
-          <div className="container">
-            <Typography.Title level={ 4 }>Step 3. Join groups</Typography.Title>
-            <JoinGroupsForm
-              onRef={ this.onRefJoinGroupsForm }
-            />
-          </div>
-          :
-          null
+        <div className={ `container ${this.state.step !== 3 ? "disabled" : null}` }>
+          <Typography.Title level={ 4 }>Step 3. Join groups</Typography.Title>
+          <JoinGroupsForm
+            onRef={ this.onRefJoinGroupsForm }
+          />
+        </div>
+      </div>
     )
   }
 }

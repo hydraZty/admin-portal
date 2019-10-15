@@ -15,8 +15,8 @@ const AssignPermissionForm = Form.create({ name: 'assign_permission_form' })(
       this.state = {
         roleOptions: [],
         resourceOptions: [],
-        roleData: [],
-        results: [],
+        results: [],    // Select component results
+        policyData: [],   //
       }
     }
 
@@ -25,7 +25,7 @@ const AssignPermissionForm = Form.create({ name: 'assign_permission_form' })(
       // Removed from the results when the node was disabled
       if (disable) {
         _.remove(this.state.results, (r) => {
-          return r.value === item.name
+          return r.value === item.path
         })
       }
       if (item.children) {
@@ -35,15 +35,15 @@ const AssignPermissionForm = Form.create({ name: 'assign_permission_form' })(
           disableChildren = true
         } else {
           let values = this.state.results.map(v => v.value)
-          disableChildren = values.includes(item.name)
+          disableChildren = values.includes(item.path)
         }
         return (
-          <TreeSelect.TreeNode title={ item.name } key={ item.path } value={ item.name } disabled={ disable }>
+          <TreeSelect.TreeNode title={ item.name } key={ item.path } value={ item.path } disabled={ disable }>
             { this.renderTreeNodes(item.children, disableChildren) }
           </TreeSelect.TreeNode>
         )
       }
-      return <TreeSelect.TreeNode key={ item.path } title={ item.name } value={ item.name } { ...item } />
+      return <TreeSelect.TreeNode key={ item.path } title={ item.name } value={ item.path } { ...item } />
     })
 
 
@@ -78,14 +78,14 @@ const AssignPermissionForm = Form.create({ name: 'assign_permission_form' })(
       })
     }
     handleSubmit = () => {
-      return this.state.roleData
+      return this.state.policyData
     }
 
     AddRole = () => {
       this.props.form.validateFields((err, values) => {
         if (!err) {
           this.setState({
-            roleData: this.state.roleData.concat(values)
+            policyData: this.state.policyData.concat(values)
           })
           this.props.form.resetFields()
         } else {
@@ -95,16 +95,16 @@ const AssignPermissionForm = Form.create({ name: 'assign_permission_form' })(
     }
 
     removeRole = (index) => {
-      this.state.roleData.splice(index, 1)
+      this.state.policyData.splice(index, 1)
       this.setState({
-        roleData: this.state.roleData
+        policyData: this.state.policyData
       })
     }
 
     removeResource = (rowIndex, resourceIndex) => {
-      this.state.roleData[rowIndex].resource.splice(resourceIndex, 1)
+      this.state.policyData[rowIndex].resources.splice(resourceIndex, 1)
       this.setState({
-        roleData: this.state.roleData
+        policyData: this.state.policyData
       })
     }
 
@@ -113,7 +113,7 @@ const AssignPermissionForm = Form.create({ name: 'assign_permission_form' })(
       const { getFieldDecorator } = form
 
       const filteredRoleOptions = this.state.roleOptions.filter(o => {
-        let keys = this.state.roleData.map(i => i.role.key)
+        let keys = this.state.policyData.map(i => i.role.key)
         return !keys.includes(o.id)
       })
 
@@ -144,14 +144,14 @@ const AssignPermissionForm = Form.create({ name: 'assign_permission_form' })(
                 </Col>
                 <Col span={ 14 }>
                   <Form.Item className="assign-permission-form-item">
-                    { getFieldDecorator('resource', {
+                    { getFieldDecorator('resources', {
                       rules: [
                         { required: false, type: 'array' },
                       ],
                     })(
                       <TreeSelect
-                        style={ { width: '100%'} }
-                        dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                        style={ { width: '100%' } }
+                        dropdownStyle={ { maxHeight: 400, overflow: 'auto' } }
                         allowClear
                         labelInValue
                         showSearch
@@ -175,7 +175,7 @@ const AssignPermissionForm = Form.create({ name: 'assign_permission_form' })(
               </Form>
             </Row>
             {
-              this.state.roleData.map((row, roleIndex) => {
+              this.state.policyData.map((row, roleIndex) => {
                 return (
                   <Row className="role-list-row" key={ `role-list-${roleIndex}` }>
                     <Col span={ 22 } className="role-list-item">
@@ -183,11 +183,11 @@ const AssignPermissionForm = Form.create({ name: 'assign_permission_form' })(
                         { row.role.label }
                       </div>
                       <div className="role-list-resource-tag-wrapper">
-                        { row.resource && row.resource.map((row, resourceIndex) => {
+                        { row.resources && row.resources.map((row, resourceIndex) => {
                           return (
                             <Tag
                               color="#eeedf5"
-                              key={ row.key }
+                              key={ row.label }
                               className="resource-tag"
                               closable={ true }
                               onClose={ () => this.removeResource(roleIndex, resourceIndex) }

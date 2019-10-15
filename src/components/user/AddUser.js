@@ -105,6 +105,7 @@ export default class AddUser extends Component {
         >
           <AddUserModal
             onRef={ this.onRefAddUserModal }
+            closeModal={this.closeModal}
           />
         </Modal>
       </div>

@@ -75,40 +75,25 @@ const AddUserForm = Form.create({ name: 'add_user_form' })(
       const formItems = keys.map((key, index) => {
         return (
           <Row gutter={ 8 } key={ `${key}.${index}` }>
-            <Col span={ 5 }>
+            <Col span={ 8 }>
               <Form.Item
                 required={ false }
                 className="add-user-form-item"
                 { ...other }
               >
                 <label className="label">
-                  First Name
+                  User Name
                 </label>
                 <Row>
-                  { getFieldDecorator(`users[${index}].firstName`, {
+                  { getFieldDecorator(`users[${index}].name`, {
                     validateTrigger: ['onChange', 'onBlur'],
                     rules: [requireRule,],
                   })(<Input style={ { width: '100%' } }/>) }
                 </Row>
               </Form.Item>
             </Col>
-            <Col span={ 5 } className="form-item-col">
-              <Form.Item
-                required={ false }
-                className="add-user-form-item"
-                { ...other }
-              >
-                <label className="label">
-                  Last Name
-                </label>
-                { getFieldDecorator(`users[${index}].lastName`, {
-                  validateTrigger: ['onChange', 'onBlur'],
-                  rules: [requireRule,],
-                })(<Input style={ { width: '100%' } }/>) }
-              </Form.Item>
-            </Col>
 
-            <Col span={ 12 } className="form-item-col">
+            <Col span={ 14 } className="form-item-col">
               <Form.Item
                 required={ false }
                 className="add-user-form-item"
