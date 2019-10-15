@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Checkbox, Collapse, Icon } from 'antd';
 import PropTypes from 'prop-types';
-import { map } from 'lodash';
+import { map, find, forEach } from 'lodash';
 import { arborist } from '../../utils/API';
 import './DropdownSelection.less';
 
@@ -12,13 +12,27 @@ class DropdownSelection extends Component {
     super(props);
     this.state = {
       options: [],
-      selectedOptions: [],
     };
   }
 
   componentDidMount = async () => {
     await this.loadOptions();
   }
+
+  static getDerivedStateFromProps(props, state) {
+    const options = Array.from(state.options);
+    forEach(options, option => {
+      // eslint-disable-next-line no-param-reassign
+      option.checked = !!find(
+        props.selectedOptions, o => o[props.nameKeyword] === option[props.nameKeyword]
+      );
+    });
+    return {
+      ...state,
+      options,
+    };
+  }
+
 
   loadOptions = async () => {
     const resp = await arborist.get(this.props.path);
@@ -35,17 +49,14 @@ class DropdownSelection extends Component {
   onChange = (option, checked) => {
     // TODO emit all checked data to parent component
     const selectedOptions = [];
+    // eslint-disable-next-line no-param-reassign
     option.checked = checked;
-    for (const g of this.state.options) {
-      if (g.checked) {
-        selectedOptions.push(g);
+    map(this.state.options, o => {
+      if (o.checked) {
+        selectedOptions.push(o);
       }
-    }
-    this.setState({
-      selectedOptions,
-    }, () => {
-      this.props.handleChangeOption(this.state.selectedOptions);
     });
+    this.props.handleChangeOption(selectedOptions);
   }
 
   render = () => (
@@ -79,6 +90,11 @@ DropdownSelection.propTypes = {
   field: PropTypes.string.isRequired,
   nameKeyword: PropTypes.string.isRequired,
   handleChangeOption: PropTypes.func.isRequired,
+  selectedOptions: PropTypes.array,
+};
+
+DropdownSelection.defaultProps = {
+  selectedOptions: [],
 };
 
 export default DropdownSelection;

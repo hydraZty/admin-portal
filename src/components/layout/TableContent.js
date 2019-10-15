@@ -1,11 +1,13 @@
 import React, { PureComponent } from 'react';
 import { Col, Pagination, Row } from 'antd';
-import { find } from 'lodash';
+import { find, map, cloneDeep } from 'lodash';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 import DataTable from '../data-table/DataTable';
 import RowDetail from '../data-table/RowDetail';
 import './TableContent.less';
-import { arborist } from '../../utils/API';
+import { loadUserList, setPagination } from '../../actions'
 
 // const data = [{
 //   key: 1,
@@ -48,28 +50,16 @@ class TableContent extends PureComponent {
     super(props);
     this.state = {
       selectedUser: null,
-      pagination: {
-        page: 1,
-        page_size: 10,
-        total_count: 0,
-      },
       users: [],
     };
   }
 
-  componentDidMount = async () => {
-    await this.loadUsers();
-  }
-
-  loadUsers = async () => {
-    // eslint-disable-next-line camelcase
-    const { page, page_size } = this.state.pagination;
-    // eslint-disable-next-line camelcase
-    const resp = await arborist.get(`/user?page=${page}&page_size=${page_size}`);
-    const users = resp.users.map(user => {
-      const copiedUser = Object.assign(user);
+  static getDerivedStateFromProps(props, state) {
+    const users = [];
+    let selectedUser = cloneDeep(state.selectedUser);
+    map(props.users, user => {
       const policies = [];
-      copiedUser.policies.forEach(policy => {
+      map(user.policies, policy => {
         const currentPolicy = find(policies, d => d.role === policy.role);
         if (currentPolicy) {
           currentPolicy.resources.push({
@@ -88,24 +78,32 @@ class TableContent extends PureComponent {
           });
         }
       });
-      copiedUser.policies = policies;
-      return copiedUser;
+      const copiedUser = {
+        ...user,
+        policies,
+      };
+      if (selectedUser === null) {
+        selectedUser = copiedUser;
+      }
+      users.push(copiedUser);
     });
-    await this.setState({
-      pagination: resp.pagination,
+    return {
+      ...state,
       users,
-      selectedUser: resp.users[0],
-    });
+      selectedUser,
+    };
+  }
+
+  componentDidMount = async () => {
+    await this.loadUsers();
+  }
+
+  loadUsers = async () => {
+    await this.props.loadUserList();
   }
 
   onChangePage = async (page, pageSize) => {
-    await this.setState(prevState => ({
-      pagination: {
-        ...prevState.pagination,
-        page,
-        page_size: pageSize,
-      },
-    }));
+    this.props.setPagination(page, pageSize);
     await this.loadUsers();
   }
 
@@ -139,10 +137,10 @@ class TableContent extends PureComponent {
           <Col span={10}>
             <div className="table-pagination">
               <Pagination
-                pageSize={this.state.pagination.page_size}
-                current={this.state.pagination.page}
+                pageSize={this.props.pagination.page_size}
+                current={this.props.pagination.page}
                 showSizeChanger
-                total={this.state.pagination.total_count}
+                total={this.props.pagination.total_count}
                 pageSizeOptions={['10', '25', '50']}
                 size="small"
                 onChange={this.onChangePage}
@@ -157,4 +155,35 @@ class TableContent extends PureComponent {
   }
 }
 
-export default TableContent;
+TableContent.propTypes = {
+  pagination: PropTypes.object,
+  users: PropTypes.array,
+  loadUserList: PropTypes.func,
+  setPagination: PropTypes.func,
+};
+
+TableContent.defaultProps = {
+  pagination: {
+    page: 1,
+    page_size: 10,
+    total_count: 0,
+  },
+  users: [],
+  loadUserList: () => {},
+  setPagination: () => {},
+};
+
+
+const mapStateToProps = state => ({
+  pagination: state.userList.pagination,
+  users: state.userList.users,
+});
+
+
+const mapDispatchToProps = {
+  loadUserList,
+  setPagination,
+};
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(TableContent);

@@ -1,15 +1,11 @@
-import { LOAD_USER_DATA } from '../constants/action-types';
+import { combineReducers } from 'redux';
 
-const initialState = {
-  currentUser: null,
-};
+import userReducer from './user';
+import userListReducer from './userList';
 
-const rootReducer = (state = initialState, action) => {
-  if (action.type === LOAD_USER_DATA) {
-    return { ...state, currentUser: action.payload };
-  }
-
-  return state;
-};
+const rootReducer = combineReducers({
+  user: userReducer,
+  userList: userListReducer,
+});
 
 export default rootReducer;

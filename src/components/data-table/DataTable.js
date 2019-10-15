@@ -85,6 +85,7 @@ class DataTable extends Component {
           }
           return '';
         }}
+        rowKey={(record) => record.name}
         onRow={(record, index) => ({
           onClick: () => {
             this.selectRow(record, index);
