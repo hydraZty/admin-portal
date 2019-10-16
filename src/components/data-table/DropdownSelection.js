@@ -24,7 +24,7 @@ class DropdownSelection extends Component {
     forEach(options, option => {
       // eslint-disable-next-line no-param-reassign
       option.checked = !!find(
-        props.selectedOptions, o => o[props.nameKeyword] === option[props.nameKeyword]
+        props.selectedOptions, o => o[props.nameKeyword] === option[props.nameKeyword],
       );
     });
     return {
@@ -38,6 +38,7 @@ class DropdownSelection extends Component {
     const resp = await arborist.get(this.props.path);
     let options = resp[this.props.field];
     options = map(options, option => {
+      // eslint-disable-next-line no-param-reassign
       option.checked = false;
       return option;
     });

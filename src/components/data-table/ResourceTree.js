@@ -3,7 +3,7 @@ import { Icon, Select, Tree } from 'antd';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { arborist } from '../../utils/API';
-import { unflatten } from '../../utils/util';
+import { formatTreeData, unflatten } from '../../utils/util';
 import { setUserResourceFilterData, loadUserList } from '../../actions';
 
 const { Option } = Select;
@@ -25,8 +25,9 @@ class ResourceTree extends Component {
 
   loadResourceTree = async () => {
     const resp = await arborist.get('/resource');
+    const resources = formatTreeData(resp.resources);
     this.setState({
-      resourceData: unflatten(resp.resources),
+      resourceData: unflatten(resources),
     });
   }
 
