@@ -1,48 +1,69 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Tag } from 'antd';
+import { Card, Empty } from 'antd';
 
+import AssignPermissionForm from '../user/AssignPermissionForm';
+import { arborist } from '../../utils/API';
+import { unflatten, formatResourceName, formatTreeData } from '../../utils/util';
 import './UserPoliciesCard.less';
-import { formatResourceName } from '../../utils/util';
+
 
 class UserPoliciesCard extends Component {
   constructor (props) {
     super(props);
-    this.state = {};
+    this.state = {
+      roleOptions: [],
+      resourceOptions: [],
+    };
   }
 
+
+  onRefAssignPermissionForm = (ref) => {
+    this.assignPermissionForm = ref;
+  };
+
+  componentDidMount () {
+    this.props.onRef(this);
+    this.loadResourceOptions();
+    this.loadRoleOptions();
+  }
+
+  submitEdit = () => this.assignPermissionForm.handleSubmit();
+
+  loadRoleOptions = async () => {
+    const resp = await arborist.get('/role');
+    this.setState({
+      roleOptions: resp.roles,
+    });
+  };
+
+  loadResourceOptions = async () => {
+    const resp = await arborist.get('/resource');
+    const resources = formatTreeData(resp.resources);
+    this.setState({
+      resourceOptions: unflatten(resources),
+    });
+
+  };
+
   render () {
-    const policies = (
-      <table className="card-table">
-        <tbody>{
-          this.props.policies.map(policy => (
-            <tr key={policy.role}>
-              <td className="role-name">{policy.role}</td>
-              <td>
-                {policy.resources && policy.resources.map(resource => (
-                  <Tag
-                    color="#e7e7e7"
-                    key={resource.policy}
-                    style={{
-                      color: '#3283c8',
-                      marginBottom: 4,
-                      marginLeft: 2,
-                      marginRight: 2,
-                    }}
-                  >
-                    {formatResourceName(resource.resource)}
-                  </Tag>
-                ))}
-              </td>
-            </tr>
-          ))
-        }
-        </tbody>
-      </table>
-    );
     return (
-      <Card title="User Policies" bordered={false} className="row-detail-card">
-        {policies}
+      <Card
+        title="User Permissions"
+        bordered={false}
+        className="row-detail-card"
+      >
+        {
+          this.props.policies.length || !this.props.readOnly ? (
+            <AssignPermissionForm
+              onRef={this.onRefAssignPermissionForm}
+              readOnly={this.props.readOnly}
+              policies={this.props.policies}
+              roleOptions={this.state.roleOptions}
+              resourceOptions={this.state.resourceOptions}
+            />
+          ) : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        }
       </Card>
     );
   }
@@ -50,6 +71,7 @@ class UserPoliciesCard extends Component {
 
 UserPoliciesCard.propTypes = {
   policies: PropTypes.array.isRequired,
+  readOnly: PropTypes.bool,
 };
 
 

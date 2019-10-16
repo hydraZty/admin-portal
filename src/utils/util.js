@@ -58,3 +58,25 @@ export const unflatten = (resources) => {
   });
   return tree;
 };
+
+export const formatPolicies = (policiesFormData) => {
+  const policies = [];
+  policiesFormData.forEach(item => {
+    if (item.resources.length) {
+      item.resources.forEach(resource => {
+        policies.push({
+          policy: resource.policy,
+          resource: resource.resource,
+          role: item.role,
+        });
+      });
+    } else {
+      policies.push({
+        policy: item.role,
+        resource: '',
+        role: item.role,
+      });
+    }
+  });
+  return policies;
+};

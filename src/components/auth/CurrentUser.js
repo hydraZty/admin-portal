@@ -60,6 +60,9 @@ class CurrentUser extends Component {
           visible={this.state.loginModalVisible}
           onCancel={this.handleCancel}
           onOk={this.handleCancel}
+          className="custom-modal"
+          okButtonProps={{ type: 'link' }}
+          cancelButtonProps={{ type: 'link' }}
         >
           <MockLoginPage />
         </Modal>
