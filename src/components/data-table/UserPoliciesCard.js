@@ -15,13 +15,13 @@ class UserPoliciesCard extends Component {
       <table className="card-table">
         <tbody>{
           this.props.policies.map(policy => (
-            <tr key={policy.id}>
-              <td className="role-name">{policy.roleName}</td>
+            <tr key={policy.role}>
+              <td className="role-name">{policy.role}</td>
               <td>
-                {policy.resources.map(resource => (
+                {policy.resources && policy.resources.map(resource => (
                   <Tag
                     color="#e7e7e7"
-                    key={resource}
+                    key={resource.policy}
                     style={{
                       color: '#3283c8',
                       marginBottom: 4,
@@ -29,7 +29,7 @@ class UserPoliciesCard extends Component {
                       marginRight: 2,
                     }}
                   >
-                    {resource}
+                    {resource.resource}
                   </Tag>
                 ))}
               </td>

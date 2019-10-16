@@ -8,7 +8,9 @@ import MockLoginPage from './MockLoginPage';
 import './CurrentUser.less';
 
 
-const mapStateToProps = state => ({ user: state.currentUser });
+const mapStateToProps = state => ({
+  user: state.user.currentUser,
+});
 
 
 const mapDispatchToProps = (dispatch) => ({

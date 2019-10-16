@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button } from 'antd';
 
-import API from '../../utils/API';
+import { fence } from '../../utils/API';
 
 import './MockLoginPage.less';
 
@@ -19,8 +19,8 @@ class LoginPage extends Component {
   }
 
   loadLoginProviders = async () => {
-    const resp = await API.get('/user/login');
-    const providers = resp.data.providers || [];
+    const resp = await fence.get('/login');
+    const providers = resp.providers || [];
     this.setState({
       providers,
     });
