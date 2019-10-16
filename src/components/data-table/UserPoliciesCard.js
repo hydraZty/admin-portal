@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Card, Tag } from 'antd';
 
 import './UserPoliciesCard.less';
+import { formatResourceName } from '../../utils/util';
 
 class UserPoliciesCard extends Component {
   constructor (props) {
@@ -29,7 +30,7 @@ class UserPoliciesCard extends Component {
                       marginRight: 2,
                     }}
                   >
-                    {resource.resource}
+                    {formatResourceName(resource.resource)}
                   </Tag>
                 ))}
               </td>

@@ -1,8 +1,14 @@
-import { filter, forEach } from 'lodash';
+import { filter, forEach, toUpper } from 'lodash';
 
 const INVISIBLE_NODES = ['programs', 'projects'];
 
 export const treeNodeVisible = (name) => INVISIBLE_NODES.indexOf(name) === -1;
+
+export const formatResourceName = (resource) => {
+  let res = resource;
+  res = res.replace('_', '-');
+  return toUpper(res);
+};
 
 export const formatTreeData = (treeData) => {
   forEach(treeData, node => {
