@@ -61,8 +61,8 @@ class CurrentUser extends Component {
           onCancel={this.handleCancel}
           onOk={this.handleCancel}
           className="custom-modal"
-          okButtonProps={ { type: 'link' } }
-          cancelButtonProps={ { type: 'link' } }
+          okButtonProps={{ type: 'link' }}
+          cancelButtonProps={{ type: 'link' }}
         >
           <MockLoginPage />
         </Modal>

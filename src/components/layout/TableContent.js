@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import DataTable from '../data-table/DataTable';
 import RowDetail from '../data-table/RowDetail';
 import './TableContent.less';
-import { loadUserList, setPagination } from '../../actions'
+import { loadUserList, setPagination } from '../../actions';
 
 // const data = [{
 //   key: 1,
@@ -147,7 +147,10 @@ class TableContent extends PureComponent {
                 onShowSizeChange={this.onShowSizeChange}
               />
             </div>
-            <RowDetail user={this.state.selectedUser} />
+            <RowDetail
+              user={this.state.selectedUser}
+              key={JSON.stringify(this.state.selectedUser)}
+            />
           </Col>
         </Row>
       </div>
