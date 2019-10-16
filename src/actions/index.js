@@ -70,13 +70,13 @@ export const loadUserList = () => async (dispatch, getState) => {
   });
 };
 
-export const setPagination = (page, pageSize, total = null) => (dispatch, state) => {
+export const setPagination = (page, pageSize, total = null) => (dispatch, getState) => {
   dispatch({
     type: LOAD_USER_PAGINATION,
     payload: {
       page,
       page_size: pageSize,
-      total: total || state.userList.pagination.total_count,
+      total: total || getState().userList.pagination.total_count,
     },
   });
 };
