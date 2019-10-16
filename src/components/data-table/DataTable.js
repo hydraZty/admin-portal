@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Table, Tag } from 'antd';
 
 import './DataTable.less';
+import { formatResourceName } from '../../utils/util';
 
 const columns = [{
   title: 'User',
@@ -40,7 +41,7 @@ const columns = [{
                 key={resource.policy}
                 style={{ color: '#3283c8', marginRight: 4 }}
               >
-                {resource.resource}
+                {formatResourceName(resource.resource)}
               </Tag>
             ))}
             <span>
