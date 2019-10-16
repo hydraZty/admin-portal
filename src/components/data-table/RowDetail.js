@@ -7,6 +7,8 @@ import EditUserForm from '../user/EditUserForm';
 import './RowDetail.less';
 import { arborist } from '../../utils/API';
 import { formatPolicies } from '../../utils/util';
+import { connect } from 'react-redux';
+import { loadUserList } from '../../actions';
 
 class RowDetail extends Component {
   constructor (props) {
@@ -59,7 +61,7 @@ class RowDetail extends Component {
         email: userInfo.email.value,
         policies,
       });
-      window.location.reload(false);
+      this.props.loadUserList();
     } catch (e) {
       console.log(e.message);
       return false;
@@ -149,4 +151,13 @@ RowDetail.defaultProps = {
   user: null,
 };
 
-export default RowDetail;
+const mapStateToProps = state => ({
+});
+
+
+const mapDispatchToProps = {
+  loadUserList,
+};
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(RowDetail);
