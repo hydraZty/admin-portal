@@ -60,7 +60,8 @@ class JoinGroups extends React.Component {
 
       // Filter the options has added
       const filteredGroupOptions = this.state.groupOptions.filter(o => {
-        const keys = this.state.groupData.map(i => i.group.key);
+        let keys = this.state.groupData.map(i => i.group.key);
+        keys = keys.concat(['anonymous','logged-in']);
         return !keys.includes(o.name);
       });
 

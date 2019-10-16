@@ -9,6 +9,8 @@ import JoinGroupsForm from './JoinGroupsForm';
 import './AddUserModal.less';
 import { arborist } from '../../utils/API';
 import { unflatten, formatPolicies, formatTreeData } from '../../utils/util';
+import { loadUserList } from '../../actions';
+import { connect } from 'react-redux';
 
 class AddUserModal extends Component {
   constructor (props) {
@@ -131,7 +133,7 @@ class AddUserModal extends Component {
 
       try {
         await arborist.post('/users', content);
-        window.location.reload(false);
+        this.props.loadUserList();
         this.props.closeModal();
       } catch (e) {
         Modal.error({
@@ -183,4 +185,13 @@ class AddUserModal extends Component {
   }
 }
 
-export default AddUserModal;
+const mapStateToProps = state => ({
+});
+
+
+const mapDispatchToProps = {
+  loadUserList,
+};
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddUserModal);

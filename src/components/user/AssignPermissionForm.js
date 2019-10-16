@@ -6,6 +6,8 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 
 import './AssignPermissionForm.less';
+import { loadUserList } from '../../actions';
+import { connect } from 'react-redux';
 
 class AssignPermission extends React.Component {
   constructor (props) {
