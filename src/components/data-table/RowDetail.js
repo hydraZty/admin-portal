@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Avatar, Button } from 'antd';
 
-import UserPoliciesCard from './UserPoliciesCard';
-import EditUserForm from '../user/EditUserForm';
 import './RowDetail.less';
+import { connect } from 'react-redux';
 import { arborist } from '../../utils/API';
 import { formatPolicies } from '../../utils/util';
-import { connect } from 'react-redux';
 import { loadUserList } from '../../actions';
+import EditUserForm from '../user/EditUserForm';
+import UserPoliciesCard from './UserPoliciesCard';
 
 class RowDetail extends Component {
   constructor (props) {
@@ -63,13 +63,13 @@ class RowDetail extends Component {
       });
       this.props.loadUserList();
     } catch (e) {
-      console.log(e.message);
       return false;
     }
 
     this.setState({
       readOnly: true,
     });
+    return false;
   };
 
   renderEditButton = () => (
@@ -145,13 +145,13 @@ RowDetail.propTypes = {
     email: PropTypes.string,
     policies: PropTypes.array,
   }),
+  loadUserList: PropTypes.func,
 };
 
 RowDetail.defaultProps = {
   user: null,
+  loadUserList: () => {},
 };
-
-const mapStateToProps = state => ({});
 
 
 const mapDispatchToProps = {
@@ -159,4 +159,4 @@ const mapDispatchToProps = {
 };
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(RowDetail);
+export default connect(mapDispatchToProps)(RowDetail);

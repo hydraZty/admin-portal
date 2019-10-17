@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
-import { Typography, Row, Col,Modal } from 'antd';
+import {
+  Typography, Row, Col, Modal,
+} from 'antd';
 import PropTypes from 'prop-types';
 
+import { connect } from 'react-redux';
+import { loadUserList } from '../../actions';
 import AddUserForm from './AddUserForm';
 import AssignPermissionForm from './AssignPermissionForm';
 import JoinGroupsForm from './JoinGroupsForm';
-
-import './AddUserModal.less';
 import { arborist } from '../../utils/API';
 import { unflatten, formatPolicies, formatTreeData } from '../../utils/util';
-import { loadUserList } from '../../actions';
-import { connect } from 'react-redux';
+import './AddUserModal.less';
+
 
 class AddUserModal extends Component {
   constructor (props) {
@@ -19,10 +21,20 @@ class AddUserModal extends Component {
       step: 1,
       users: [],
       policies: [],
-      groups: [],
       roleOptions: [],
       resourceOptions: [],
     };
+  }
+
+  componentDidMount () {
+    this.props.onRef(this);
+    document.title = 'Add New User';
+    this.loadResourceOptions();
+    this.loadRoleOptions();
+  }
+
+  componentWillUnmount () {
+    document.title = 'Admin Portal';
   }
 
   loadRoleOptions = async () => {
@@ -40,18 +52,6 @@ class AddUserModal extends Component {
     });
   };
 
-  static propTypes = {
-    onRef: PropTypes.func,
-    closeModal: PropTypes.func,
-  };
-
-  componentDidMount () {
-    this.props.onRef(this);
-    document.title = 'Add New User';
-    this.loadResourceOptions();
-    this.loadRoleOptions();
-  }
-
   onRefAddUserForm = (ref) => {
     this.addUserForm = ref;
   };
@@ -63,10 +63,6 @@ class AddUserModal extends Component {
   onRefJoinGroupsForm = (ref) => {
     this.joinGroupsForm = ref;
   };
-
-  componentWillUnmount () {
-    document.title = 'Admin Portal';
-  }
 
   handleNextStep () {
     switch (this.state.step) {
@@ -84,51 +80,47 @@ class AddUserModal extends Component {
   }
 
   handlePreviousStep () {
-    this.setState({
-      step: this.state.step - 1,
-    });
+    this.setState(prevState => ({
+      step: prevState.step - 1,
+    }));
   }
-
 
   async handleSubmitFirstStep () {
     const { users } = await this.addUserForm.handleSubmit();
     if (users) {
-      this.setState({
+      this.setState(prevState => ({
         users,
-        step: this.state.step + 1,
+        step: prevState.step + 1,
+      }));
+    } else {
+      Modal.error({
+        title: 'Missing Users',
       });
-    }else{
-        Modal.error({
-          title: 'Missing Users',
-        });
     }
   }
 
   handleSubmitSecondStep () {
     const policies = this.assignPermissionForm.handleSubmit();
     if (policies && policies.length) {
-      this.setState({
+      this.setState(prevState => ({
         policies,
-        step: this.state.step + 1,
+        step: prevState.step + 1,
+      }));
+    } else {
+      Modal.error({
+        title: 'Missing Policies',
       });
-    }else{
-        Modal.error({
-          title: 'Missing Policies',
-        });
     }
   }
-
 
   async handleSubmitThirdStep () {
     const groups = this.joinGroupsForm.handleSubmit();
     if (groups && groups.length) {
       const policies = formatPolicies(this.state.policies);
-
       const content = {
         users: this.state.users,
         policies,
         groups: groups.map(group => group.group.key),
-
       };
 
       try {
@@ -139,14 +131,14 @@ class AddUserModal extends Component {
         Modal.error({
           title: 'Create User Fail',
         });
-        console.log(e.error);
         return false;
       }
-    }else{
-        Modal.error({
-          title: 'Missing Groups',
-        });
+    } else {
+      Modal.error({
+        title: 'Missing Groups',
+      });
     }
+    return false;
   }
 
   render () {
@@ -185,9 +177,19 @@ class AddUserModal extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-});
+AddUserModal.propTypes = {
+  onRef: PropTypes.func,
+  closeModal: PropTypes.func,
+  loadUserList: PropTypes.func,
+};
 
+AddUserModal.defaultProps = {
+  onRef: () => {},
+  closeModal: () => {},
+  loadUserList: () => {},
+};
+
+const mapStateToProps = () => ({});
 
 const mapDispatchToProps = {
   loadUserList,

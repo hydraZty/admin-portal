@@ -6,8 +6,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 
 import './AssignPermissionForm.less';
-import { loadUserList } from '../../actions';
-import { connect } from 'react-redux';
+
 
 class AssignPermission extends React.Component {
   constructor (props) {
@@ -28,35 +27,36 @@ class AssignPermission extends React.Component {
 
   handleSubmit = () => this.state.policyData;
 
-  AddRole = () => {
-    this.props.form.validateFields((err, values) => {
-      if (!err) {
-        values.role = values.role.label;
-        values.resources = values.resources ? values.resources.map(resource => ({
-          policy: `${resource.value.slice(1).replace(/\//ig, '.')}-${values.role}`,
-          resource: resource.label,
-        })) : [];
-        this.setState({
-          policyData: this.state.policyData.concat(values),
-        });
-        this.props.form.resetFields();
-      } else {
-        return err;
-      }
-    });
-  };
-
   removeRole = (index) => {
     this.state.policyData.splice(index, 1);
-    this.setState({
-      policyData: this.state.policyData,
-    });
+    this.setState(prevState => ({
+      policyData: prevState.policyData,
+    }));
   };
 
   removeResource = (rowIndex, resourceIndex) => {
     this.state.policyData[rowIndex].resources.splice(resourceIndex, 1);
-    this.setState({
-      policyData: this.state.policyData,
+    this.setState(prevState => ({
+      policyData: prevState.policyData,
+    }));
+  };
+
+  AddRole = () => {
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        const newValues = {};
+        newValues.role = values.role.label;
+        newValues.resources = values.resources ? values.resources.map(resource => ({
+          policy: `${resource.value.slice(1).replace(/\//ig, '.')}-${values.role}`,
+          resource: resource.label,
+        })) : [];
+        this.setState(prevState => ({
+          policyData: prevState.policyData.concat(newValues),
+        }));
+        this.props.form.resetFields();
+        return true;
+      }
+      return err;
     });
   };
 
@@ -119,15 +119,13 @@ class AssignPermission extends React.Component {
                     style={{ width: '95%' }}
                     placeholder="Select role"
                   >
-                    {
-                      filteredRoleOptions.map(r => (
-                        <Select.Option
-                          value={r.id}
-                          key={r.id}
-                        >{r.id}
-                        </Select.Option>
-                      ))
-                    }
+                    {filteredRoleOptions.map(r => (
+                      <Select.Option
+                        value={r.id}
+                        key={r.id}
+                      >{r.id}
+                      </Select.Option>
+                    ))}
                   </Select>,
                 )}
               </Form.Item>
@@ -158,42 +156,48 @@ class AssignPermission extends React.Component {
             </Col>
 
             <Col span={2} className="add-role-col">
-              <div className="icon-wrapper" onClick={this.AddRole}>
+              <div
+                className="icon-wrapper"
+                onClick={this.AddRole}
+                role="presentation"
+                onKeyPress={this.AddRole}
+              >
                 <Icon type="plus" />
               </div>
             </Col>
           </Form>
         </Row>
-      )}
-        {this.state.policyData.map((row, roleIndex) => (
-        <Row className="role-list-row" key={`role-list-${roleIndex}`}>
-            <Col span={8} className="role-list-item">
+      )}{this.state.policyData.map((row, roleIndex) => (
+        <Row className="role-list-row" key={`role-list-${row}`}>
+          <Col span={8} className="role-list-item">
             {row.role}
           </Col>
-            <Col span={14} className="role-list-resource-tag-wrapper">
-            {row.resources && row.resources.map((row, resourceIndex) => (
-                <Tag
+          <Col span={14} className="role-list-resource-tag-wrapper">
+            {row.resources && row.resources.map((resource, resourceIndex) => (
+              <Tag
                 color="#eeedf5"
-                key={row.resource}
+                key={resource.resource}
                 className="resource-tag"
                 closable={!readOnly}
                 onClose={() => this.removeResource(roleIndex, resourceIndex)}
               >
-                {row.resource}
+                {resource.resource}
               </Tag>
             ))}
           </Col>
-            {readOnly ? null : (
+          {readOnly ? null : (
             <Col span={2} className="delete-role-col">
-                <div
+              <div
+                role="presentation"
+                onKeyPress={() => this.removeRole(roleIndex)}
                 className="icon-wrapper"
                 onClick={() => this.removeRole(roleIndex)}
               >
                 <Icon type="plus" rotate={45} />
               </div>
-              </Col>
+            </Col>
           )}
-          </Row>
+        </Row>
       ))}
       </div>
     );
@@ -201,8 +205,8 @@ class AssignPermission extends React.Component {
 }
 
 AssignPermission.propTypes = {
-  onRef: PropTypes.func,
-  form: PropTypes.any.isRequired,
+  onRef: PropTypes.func.isRequired,
+  form: PropTypes.object.isRequired,
   roleOptions: PropTypes.array,
   resourceOptions: PropTypes.array,
   readOnly: PropTypes.bool,
@@ -210,8 +214,6 @@ AssignPermission.propTypes = {
 };
 
 AssignPermission.defaultProps = {
-  onRef: () => {
-  },
   roleOptions: [],
   resourceOptions: [],
   readOnly: false,
