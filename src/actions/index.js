@@ -5,6 +5,9 @@ import {
   LOAD_USER_GROUP_FILTER, LOAD_USER_LIST, LOAD_USER_PAGINATION,
   LOAD_USER_RESOURCE_FILTER,
   LOAD_USER_ROLE_FILTER,
+  LOAD_NAMESPACE_DATA,
+  SET_SELECTED_NAMESPACE,
+  LOAD_RESOURCE_DATA,
 } from '../constants/action-types';
 import { arborist, fence } from '../utils/API';
 
@@ -13,6 +16,21 @@ export const loadUserData = () => (dispatch) => fence.get('/user').then(resp => 
   type: LOAD_USER_DATA,
   payload: resp,
 }));
+
+export const loadNamespaceData = () => (dispatch) => arborist.get('/resource/namespace').then(resp => dispatch({
+  type: LOAD_NAMESPACE_DATA,
+  payload: resp.resources,
+}));
+
+export const setSelectedNamespace = (namespace) => async (dispatch) => dispatch({
+  type: SET_SELECTED_NAMESPACE,
+  payload: namespace,
+});
+
+export const setResourceTreeData = (data) => (dispatch) => dispatch({
+  type: LOAD_RESOURCE_DATA,
+  payload: data,
+});
 
 export const setUserResourceFilterData = (resources) => (dispatch) => dispatch({
   type: LOAD_USER_RESOURCE_FILTER,
