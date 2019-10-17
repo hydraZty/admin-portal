@@ -74,6 +74,8 @@ class DataTable extends Component {
     this.props.onRowSelect(record);
   };
 
+  scrollHeight = () => window.innerHeight - 64 - 32 - 54;
+
   render () {
     return (
       <Table
@@ -86,6 +88,7 @@ class DataTable extends Component {
           }
           return '';
         }}
+        scroll={{ y: this.scrollHeight() }}
         rowKey={(record) => record.name}
         onRow={(record, index) => ({
           onClick: () => {

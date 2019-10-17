@@ -47,7 +47,7 @@ class AssignPermission extends React.Component {
         const newValues = {};
         newValues.role = values.role.label;
         newValues.resources = values.resources ? values.resources.map(resource => ({
-          policy: `${resource.value.slice(1).replace(/\//ig, '.')}-${values.role}`,
+          policy: `${resource.value.slice(1).replace(/\//ig, '.')}-${newValues.role}`,
           resource: resource.label,
         })) : [];
         this.setState(prevState => ({
@@ -168,7 +168,7 @@ class AssignPermission extends React.Component {
           </Form>
         </Row>
       )}{this.state.policyData.map((row, roleIndex) => (
-        <Row className="role-list-row" key={`role-list-${row}`}>
+        <Row className="role-list-row" key={`role-list-${row.role}`}>
           <Col span={8} className="role-list-item">
             {row.role}
           </Col>
