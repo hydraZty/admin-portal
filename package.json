@@ -6,7 +6,8 @@
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
-    "lint": "./node_modules/.bin/eslint --fix src"
+    "lint": "./node_modules/.bin/eslint --fix src",
+    "stylelint": "stylelint 'src/**/*.less' 'src/**/*.css' --config .stylelintrc.js --fix"
   },
   "dependencies": {
     "antd": "^3.23.5",
@@ -33,7 +34,8 @@
     "eslint-plugin-react": "^7.15.1",
     "eslint-plugin-react-hooks": "^1.7.0",
     "less": "^3.10.3",
-    "less-loader": "^5.0.0"
+    "less-loader": "^5.0.0",
+    "stylelint": "^11.1.1"
   },
   "eslintConfig": {
     "extends": "react-app"
