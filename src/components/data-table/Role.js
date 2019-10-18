@@ -9,11 +9,18 @@ class Role extends Component {
   handleChangeOption = (selectedRoles) => {
     this.props.setUserRoleFilterData(selectedRoles);
     this.props.loadUserList();
-  }
+  };
 
   render = () => (
-    <DropdownSelection path="/role" field="roles" title="Roles" nameKeyword="id" selectedOptions={this.props.roles} handleChangeOption={this.handleChangeOption} />
-  )
+    <DropdownSelection
+      path="/role"
+      field="roles"
+      title="Roles"
+      nameKeyword="id"
+      selectedOptions={this.props.roles}
+      handleChangeOption={this.handleChangeOption}
+    />
+  );
 }
 
 Role.propTypes = {
@@ -24,8 +31,10 @@ Role.propTypes = {
 
 Role.defaultProps = {
   roles: [],
-  setUserRoleFilterData: () => {},
-  loadUserList: () => {},
+  setUserRoleFilterData: () => {
+  },
+  loadUserList: () => {
+  },
 };
 
 

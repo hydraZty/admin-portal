@@ -24,12 +24,12 @@ class LoginPage extends Component {
     this.setState({
       providers,
     });
-  }
+  };
 
   onLogin = async (provider) => {
     const { location } = window;
     window.location.href = `${provider.url}?redirect=${location.href}`;
-  }
+  };
 
   render () {
     return (

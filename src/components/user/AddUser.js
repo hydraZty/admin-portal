@@ -32,31 +32,31 @@ export default class AddUser extends Component {
   afterModalStep = () => {
     const currentStep = this.addUserModal.state.step;
     switch (currentStep) {
-    case 0:
-      this.closeModal();
-      break;
-    case 1:
-      this.setState({
-        cancelText: TEXT.cancel,
-      });
-      break;
-    case 2:
-      this.setState({
-        cancelText: TEXT.previous,
-        okText: TEXT.saveNext,
-      });
-      break;
-    case 3:
-      this.setState({
-        okText: TEXT.finish,
-      });
-      break;
-    case 4:
-      this.setState({
-        AddUserModalVisible: false,
-      });
-      break;
-    default:
+      case 0:
+        this.closeModal();
+        break;
+      case 1:
+        this.setState({
+          cancelText: TEXT.cancel,
+        });
+        break;
+      case 2:
+        this.setState({
+          cancelText: TEXT.previous,
+          okText: TEXT.saveNext,
+        });
+        break;
+      case 3:
+        this.setState({
+          okText: TEXT.finish,
+        });
+        break;
+      case 4:
+        this.setState({
+          AddUserModalVisible: false,
+        });
+        break;
+      default:
     }
   };
 

@@ -3,7 +3,11 @@ import { Icon, Select, Tree } from 'antd';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { arborist } from '../../utils/API';
-import { formatTreeData, unflatten, formatResourceName } from '../../utils/util';
+import {
+  formatTreeData,
+  unflatten,
+  formatResourceName,
+} from '../../utils/util';
 import {
   setUserResourceFilterData,
   loadUserList,
@@ -57,12 +61,22 @@ class ResourceTree extends Component {
   renderTreeNodes = data => data.map(item => {
     if (item.children) {
       return (
-        <TreeNode title={formatResourceName(item.name)} key={item.tag} dataRef={item}>
+        <TreeNode
+          title={formatResourceName(item.name)}
+          key={item.tag}
+          dataRef={item}
+        >
           {this.renderTreeNodes(item.children)}
         </TreeNode>
       );
     }
-    return <TreeNode key={item.tag} title={formatResourceName(item.name)} {...item} />;
+    return (
+      <TreeNode
+        key={item.tag}
+        title={formatResourceName(item.name)}
+        {...item}
+      />
+    );
   });
 
   render () {
@@ -78,7 +92,7 @@ class ResourceTree extends Component {
           {
             this.props.namespaces.map(
               namespace => (
-                <Option value={namespace.path}>
+                <Option value={namespace.path} key={namespace.path}>
                   {formatResourceName(namespace.name)}
                 </Option>
               ),
@@ -119,11 +133,16 @@ ResourceTree.defaultProps = {
   resourcesData: [],
   namespaces: [],
   selectedNamespace: null,
-  setUserResourceFilterData: () => {},
-  loadUserList: () => {},
-  loadNamespaceData: () => {},
-  setSelectedNamespace: () => {},
-  setResourceTreeData: () => {},
+  setUserResourceFilterData: () => {
+  },
+  loadUserList: () => {
+  },
+  loadNamespaceData: () => {
+  },
+  setSelectedNamespace: () => {
+  },
+  setResourceTreeData: () => {
+  },
 };
 
 

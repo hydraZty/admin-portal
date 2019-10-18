@@ -34,7 +34,7 @@ class RowDetail extends Component {
     this.setState({
       readOnly: false,
     });
-  }
+  };
 
   handleCancel = () => {
     const { user } = this.props;
@@ -49,7 +49,7 @@ class RowDetail extends Component {
         },
       },
     });
-  }
+  };
 
   handleSave = async () => {
     const { userInfo } = this.state;
@@ -70,32 +70,32 @@ class RowDetail extends Component {
     this.setState({
       readOnly: true,
     });
-  }
+  };
 
   renderEditButton = () => (
     <div className="actions">
       <Button>Disable</Button>
       <Button type="primary" onClick={this.handleEdit}>Edit</Button>
     </div>
-  )
+  );
 
   renderSaveButton = () => (
     <div className="actions">
       <Button onClick={this.handleCancel}>Cancel</Button>
       <Button type="primary" onClick={this.handleSave}>Save</Button>
     </div>
-  )
+  );
 
   handleFormChange = changedFields => {
     this.setState(({ userInfo }) => ({
       userInfo: { ...userInfo, ...changedFields },
     }));
-  }
+  };
 
 
   onRefUserPoliciesCard = (ref) => {
     this.UserPoliciesCard = ref;
-  }
+  };
 
 
   render () {
@@ -108,15 +108,15 @@ class RowDetail extends Component {
         <div className="user-info">
           <div className="info-wrapper">
             <Avatar size={44} style={{ marginRight: 16 }}>
-              { this.props.user.name.split(' ').slice(0, 2).map(
+              {this.props.user.name.split(' ').slice(0, 2).map(
                 w => w[0],
-              ) }
+              )}
             </Avatar>
             {
               readOnly ? (
                 <div className="info-inner">
-                  <span className="user-name">{ this.props.user.name }</span>
-                  <span className="user-email">{ this.props.user.email }</span>
+                  <span className="user-name">{this.props.user.name}</span>
+                  <span className="user-email">{this.props.user.email}</span>
                 </div>
               ) :
                 <EditUserForm {...userInfo} onChange={this.handleFormChange} />
@@ -132,7 +132,7 @@ class RowDetail extends Component {
           onRef={this.onRefUserPoliciesCard}
           readOnly={readOnly}
           policies={policies}
-          key={this.props.user.name}// Replace with a unique field
+          key={this.props.user.name} // Replace with a unique field
         />
       </div>
     );
@@ -151,8 +151,7 @@ RowDetail.defaultProps = {
   user: null,
 };
 
-const mapStateToProps = state => ({
-});
+const mapStateToProps = state => ({});
 
 
 const mapDispatchToProps = {

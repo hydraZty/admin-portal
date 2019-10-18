@@ -27,17 +27,18 @@ class CurrentUser extends Component {
     };
   }
 
-  componentDidMount() {
-    this.props.loadUser().then(() => {});
+  componentDidMount () {
+    this.props.loadUser().then(() => {
+    });
   }
 
   showLogin = () => {
     this.setState({ loginModalVisible: true });
-  }
+  };
 
   handleCancel = () => {
     this.setState({ loginModalVisible: false });
-  }
+  };
 
   render () {
     let user;
@@ -77,7 +78,8 @@ CurrentUser.propTypes = {
 };
 
 CurrentUser.defaultProps = {
-  loadUser: () => {},
+  loadUser: () => {
+  },
   user: null,
 };
 

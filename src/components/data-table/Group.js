@@ -9,11 +9,18 @@ class Group extends Component {
   handleChangeOption = (selectedGroups) => {
     this.props.setUserGroupFilterData(selectedGroups);
     this.props.loadUserList();
-  }
+  };
 
   render = () => (
-    <DropdownSelection path="/group" field="groups" title="Groups" nameKeyword="name" selectedOptions={this.props.groups} handleChangeOption={this.handleChangeOption} />
-  )
+    <DropdownSelection
+      path="/group"
+      field="groups"
+      title="Groups"
+      nameKeyword="name"
+      selectedOptions={this.props.groups}
+      handleChangeOption={this.handleChangeOption}
+    />
+  );
 }
 
 Group.propTypes = {
@@ -24,8 +31,10 @@ Group.propTypes = {
 
 Group.defaultProps = {
   groups: [],
-  setUserGroupFilterData: () => {},
-  loadUserList: () => {},
+  setUserGroupFilterData: () => {
+  },
+  loadUserList: () => {
+  },
 };
 
 

@@ -4,7 +4,10 @@ import { Card, Empty } from 'antd';
 
 import AssignPermissionForm from '../user/AssignPermissionForm';
 import { arborist } from '../../utils/API';
-import { unflatten, formatResourceName, formatTreeData } from '../../utils/util';
+import {
+  unflatten,
+  formatTreeData,
+} from '../../utils/util';
 import './UserPoliciesCard.less';
 
 
@@ -17,16 +20,15 @@ class UserPoliciesCard extends Component {
     };
   }
 
-
-  onRefAssignPermissionForm = (ref) => {
-    this.assignPermissionForm = ref;
-  };
-
   componentDidMount () {
     this.props.onRef(this);
     this.loadResourceOptions();
     this.loadRoleOptions();
   }
+
+  onRefAssignPermissionForm = (ref) => {
+    this.assignPermissionForm = ref;
+  };
 
   submitEdit = () => this.assignPermissionForm.handleSubmit();
 
@@ -43,7 +45,6 @@ class UserPoliciesCard extends Component {
     this.setState({
       resourceOptions: unflatten(resources),
     });
-
   };
 
   render () {
@@ -70,9 +71,15 @@ class UserPoliciesCard extends Component {
 }
 
 UserPoliciesCard.propTypes = {
+  onRef: PropTypes.func,
   policies: PropTypes.array.isRequired,
   readOnly: PropTypes.bool,
 };
 
+UserPoliciesCard.defaultProps = {
+  readOnly: true,
+  onRef: () => {
+  },
+};
 
 export default UserPoliciesCard;

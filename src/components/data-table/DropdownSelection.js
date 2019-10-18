@@ -17,9 +17,9 @@ class DropdownSelection extends Component {
 
   componentDidMount = async () => {
     await this.loadOptions();
-  }
+  };
 
-  static getDerivedStateFromProps(props, state) {
+  static getDerivedStateFromProps (props, state) {
     const options = Array.from(state.options);
     forEach(options, option => {
       // eslint-disable-next-line no-param-reassign
@@ -45,7 +45,7 @@ class DropdownSelection extends Component {
     this.setState({
       options,
     });
-  }
+  };
 
   onChange = (option, checked) => {
     // TODO emit all checked data to parent component
@@ -58,7 +58,7 @@ class DropdownSelection extends Component {
       }
     });
     this.props.handleChangeOption(selectedOptions);
-  }
+  };
 
   render = () => (
     <div className="dropdown-container">
@@ -66,7 +66,7 @@ class DropdownSelection extends Component {
         bordered={false}
         defaultActiveKey={[`${this.props.path}_options`]}
         expandIconPosition="right"
-        expandIcon={({ isActive }) => <Icon type="down" rotate={isActive ? 180 : 0} />}
+        expandIcon={({ isActive }) => (<Icon type="down" rotate={isActive ? 180 : 0} />)}
       >
         <Panel header={this.props.title} key={`${this.props.path}_options`}>
           {
@@ -75,14 +75,14 @@ class DropdownSelection extends Component {
                 onChange={(event) => this.onChange(option, event.target.checked)}
                 key={option[this.props.nameKeyword]}
               >
-                { option[this.props.nameKeyword] }
+                {option[this.props.nameKeyword]}
               </Checkbox>
             ))
           }
         </Panel>
       </Collapse>
     </div>
-  )
+  );
 }
 
 DropdownSelection.propTypes = {
