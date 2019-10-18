@@ -4,7 +4,13 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { arborist } from '../../utils/API';
 import { formatTreeData, unflatten, formatResourceName } from '../../utils/util';
-import { setUserResourceFilterData, loadUserList } from '../../actions';
+import {
+  setUserResourceFilterData,
+  loadUserList,
+  loadNamespaceData,
+  setSelectedNamespace,
+  setResourceTreeData,
+} from '../../actions';
 
 const { Option } = Select;
 const { TreeNode } = Tree;
@@ -15,21 +21,19 @@ class ResourceTree extends Component {
     this.state = {
       expandedKeys: [],
       autoExpandParent: true,
-      resourceData: [],
     };
   }
 
   componentDidMount = async () => {
+    await this.props.loadNamespaceData();
     await this.loadResourceTree();
-  }
+  };
 
   loadResourceTree = async () => {
-    const resp = await arborist.get('/resource');
+    const resp = await arborist.get(`/resource/namespace?path=${this.props.selectedNamespace}`);
     const resources = formatTreeData(resp.resources);
-    this.setState({
-      resourceData: unflatten(resources),
-    });
-  }
+    this.props.setResourceTreeData(unflatten(resources));
+  };
 
   onExpand = expandedKeys => {
     // if not set autoExpandParent to false, if children expanded, parent can not collapse.
@@ -43,6 +47,11 @@ class ResourceTree extends Component {
   onCheck = checkedKeys => {
     this.props.setUserResourceFilterData(checkedKeys);
     this.props.loadUserList();
+  };
+
+  handleSelectNamespace = async (path) => {
+    await this.props.setSelectedNamespace(path);
+    await this.loadResourceTree();
   };
 
   renderTreeNodes = data => data.map(item => {
@@ -62,10 +71,19 @@ class ResourceTree extends Component {
         <Select
           style={{ width: 248, marginBottom: 6 }}
           placeholder="NAMESPACE"
-          defaultValue="ns-1"
+          value={this.props.selectedNamespace}
+          defaultValue="DEFAULT"
+          onChange={this.handleSelectNamespace}
         >
-          <Option value="ns-1">NAMESPACE 1</Option>
-          <Option value="ns-2">NAMESPACE 2</Option>
+          {
+            this.props.namespaces.map(
+              namespace => (
+                <Option value={namespace.path}>
+                  {formatResourceName(namespace.name)}
+                </Option>
+              ),
+            )
+          }
         </Select>
         <Tree
           checkable
@@ -77,7 +95,7 @@ class ResourceTree extends Component {
           checkedKeys={this.props.resources}
           switcherIcon={<Icon type="down" />}
         >
-          {this.renderTreeNodes(this.state.resourceData)}
+          {this.renderTreeNodes(this.props.resourcesData)}
         </Tree>
       </div>
     );
@@ -86,25 +104,43 @@ class ResourceTree extends Component {
 
 ResourceTree.propTypes = {
   resources: PropTypes.array,
+  resourcesData: PropTypes.array,
+  namespaces: PropTypes.array,
+  selectedNamespace: PropTypes.any,
   setUserResourceFilterData: PropTypes.func,
   loadUserList: PropTypes.func,
+  loadNamespaceData: PropTypes.func,
+  setSelectedNamespace: PropTypes.func,
+  setResourceTreeData: PropTypes.func,
 };
 
 ResourceTree.defaultProps = {
   resources: [],
+  resourcesData: [],
+  namespaces: [],
+  selectedNamespace: null,
   setUserResourceFilterData: () => {},
   loadUserList: () => {},
+  loadNamespaceData: () => {},
+  setSelectedNamespace: () => {},
+  setResourceTreeData: () => {},
 };
 
 
 const mapStateToProps = state => ({
   resources: state.userList.resources,
+  resourcesData: state.userList.resourcesData,
+  namespaces: state.userList.namespaces,
+  selectedNamespace: state.userList.selectedNamespace,
 });
 
 
 const mapDispatchToProps = {
   setUserResourceFilterData,
   loadUserList,
+  loadNamespaceData,
+  setSelectedNamespace,
+  setResourceTreeData,
 };
 
 
