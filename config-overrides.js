@@ -9,18 +9,25 @@ const {
 const devServerConfig = () => config => {
   return {
     ...config,
-      port: 3000,
-      proxy: {
-        '/user': {
-          target: 'http://localhost:8000',
-          changeOrigin: true,
-          ws: false,
-          pathRewrite: {'^/user' : ''},
-          secure: false,
-        },
-      }
-  }
-}
+    port: 3000,
+    proxy: {
+      '/user': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+        ws: false,
+        pathRewrite: { '^/user': '' },
+        secure: false,
+      },
+      '/arborist': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+        ws: false,
+        pathRewrite: { '^/arborist': '' },
+        secure: false,
+      },
+    },
+  };
+};
 
 
 module.exports = {
