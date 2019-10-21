@@ -23,6 +23,7 @@ class AddUserModal extends Component {
       policies: [],
       roleOptions: [],
       resourceOptions: [],
+      groupOptions: [],
     };
   }
 
@@ -31,6 +32,7 @@ class AddUserModal extends Component {
     document.title = 'Add New User';
     this.loadResourceOptions();
     this.loadRoleOptions();
+    this.loadGroupOptions();
   }
 
   componentWillUnmount () {
@@ -49,6 +51,13 @@ class AddUserModal extends Component {
     const resources = formatTreeData(resp.resources);
     this.setState({
       resourceOptions: unflatten(resources),
+    });
+  };
+
+  loadGroupOptions = async () => {
+    const resp = await arborist.get('/group');
+    this.setState({
+      groupOptions: resp.groups,
     });
   };
 
@@ -120,7 +129,7 @@ class AddUserModal extends Component {
       const content = {
         users: this.state.users,
         policies,
-        groups: groups.map(group => group.group.key),
+        groups: groups.map(group => group.name),
       };
 
       try {
@@ -168,6 +177,7 @@ class AddUserModal extends Component {
             <Col span={21} offset={2}>
               <JoinGroupsForm
                 onRef={this.onRefJoinGroupsForm}
+                groupOptions={this.state.groupOptions}
               />
             </Col>
           </Row>
@@ -184,9 +194,12 @@ AddUserModal.propTypes = {
 };
 
 AddUserModal.defaultProps = {
-  onRef: () => {},
-  closeModal: () => {},
-  loadUserList: () => {},
+  onRef: () => {
+  },
+  closeModal: () => {
+  },
+  loadUserList: () => {
+  },
 };
 
 const mapStateToProps = () => ({});

@@ -4,30 +4,19 @@ import {
 } from 'antd';
 import PropTypes from 'prop-types';
 
-import { arborist } from '../../utils/API';
 import './JoinGroupsForm.less';
-
 
 class JoinGroups extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      groupOptions: [],
-      groupData: [],
+      groupData: this.props.groups,
     };
   }
 
   componentDidMount () {
     this.props.onRef(this);
-    this.loadGroupOptions();
   }
-
-  loadGroupOptions = async () => {
-    const resp = await arborist.get('/group');
-    this.setState({
-      groupOptions: resp.groups,
-    });
-  };
 
   handleSubmit = () => this.state.groupData;
 
@@ -35,7 +24,7 @@ class JoinGroups extends React.Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         this.setState(pervState => ({
-          groupData: pervState.groupData.concat(values),
+          groupData: pervState.groupData.concat({ name: values.group.key }),
         }));
         this.props.form.resetFields();
       } else {
@@ -53,18 +42,18 @@ class JoinGroups extends React.Component {
   };
 
   render () {
-    const { form } = this.props;
+    const { form, readOnly } = this.props;
     const { getFieldDecorator } = form;
 
     // Filter the options has added
-    const filteredGroupOptions = this.state.groupOptions.filter(o => {
-      let keys = this.state.groupData.map(i => i.group.key);
+    const filteredGroupOptions = this.props.groupOptions.filter(o => {
+      let keys = this.state.groupData.map(i => i.name);
       keys = keys.concat(['anonymous', 'logged-in']);
       return !keys.includes(o.name);
     });
 
     return (
-      <Row>
+      <Row>{readOnly ? null : (
         <Row>
           <Form>
             <Col span={22}>
@@ -99,25 +88,25 @@ class JoinGroups extends React.Component {
             </Col>
           </Form>
         </Row>
-        {
-          this.state.groupData.map((row, index) => (
-            <Row className="group-list-row">
-              <Col span={22} className="group-list-item">
-                {row.group.label}
-              </Col>
-              <Col span={2} className="delete-button-col">
-                <div
-                  role="presentation"
-                  className="icon-wrapper"
-                  onClick={() => this.removeGroup(index)}
-                  onKeyPress={() => this.removeGroup(index)}
-                >
-                  <Icon type="plus" rotate={45} />
-                </div>
-              </Col>
-            </Row>
-          ))
-        }
+      )}{this.state.groupData.map((group, index) => (
+        <Row className="group-list-row">
+          <Col span={22} className="group-list-item">
+            {group.name}
+          </Col>
+          {readOnly ? null : (
+            <Col span={2} className="delete-button-col">
+              <div
+                role="presentation"
+                className="icon-wrapper"
+                onClick={() => this.removeGroup(index)}
+                onKeyPress={() => this.removeGroup(index)}
+              >
+                <Icon type="plus" rotate={45} />
+              </div>
+            </Col>
+          )}
+        </Row>
+      ))}
       </Row>
     );
   }
@@ -126,11 +115,17 @@ class JoinGroups extends React.Component {
 JoinGroups.propTypes = {
   onRef: PropTypes.func,
   form: PropTypes.object.isRequired,
+  readOnly: PropTypes.bool,
+  groups: PropTypes.array,
+  groupOptions: PropTypes.array,
 };
 
 JoinGroups.defaultProps = {
   onRef: () => {
   },
+  readOnly: false,
+  groups: [],
+  groupOptions: [],
 };
 
 const JoinGroupsForm = Form.create({ name: 'join_groups_form' })(JoinGroups);
