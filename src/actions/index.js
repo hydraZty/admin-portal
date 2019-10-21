@@ -4,10 +4,10 @@ import {
   LOAD_USER_DATA,
   LOAD_USER_GROUP_FILTER, LOAD_USER_LIST, LOAD_USER_PAGINATION,
   LOAD_USER_RESOURCE_FILTER,
-  LOAD_USER_ROLE_FILTER,
   LOAD_NAMESPACE_DATA,
   SET_SELECTED_NAMESPACE,
   LOAD_RESOURCE_DATA,
+  SET_SELECTED_ROLE,
 } from '../constants/action-types';
 import { arborist, fence } from '../utils/API';
 
@@ -27,6 +27,11 @@ export const setSelectedNamespace = (namespace) => async (dispatch) => dispatch(
   payload: namespace,
 });
 
+export const setSelectedRole = (role) => async (dispatch) => dispatch({
+  type: SET_SELECTED_ROLE,
+  payload: role,
+});
+
 export const setResourceTreeData = (data) => (dispatch) => dispatch({
   type: LOAD_RESOURCE_DATA,
   payload: data,
@@ -42,15 +47,10 @@ export const setUserGroupFilterData = (groups) => (dispatch) => dispatch({
   payload: groups,
 });
 
-export const setUserRoleFilterData = (roles) => (dispatch) => dispatch({
-  type: LOAD_USER_ROLE_FILTER,
-  payload: roles,
-});
-
 export const loadUserList = () => async (dispatch, getState) => {
   const state = getState();
   const {
-    roles,
+    selectedRole,
     resources,
     groups,
   } = state.userList;
@@ -60,9 +60,9 @@ export const loadUserList = () => async (dispatch, getState) => {
   forEach(groups, group => {
     groupParams.push(group.name);
   });
-  forEach(roles, role => {
-    roleParams.push(role.id);
-  });
+  if (selectedRole) {
+    roleParams.push(selectedRole);
+  }
   forEach(resources, resource => {
     resourceParams.push(resource);
   });
