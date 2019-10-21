@@ -3,7 +3,6 @@ import React, { PureComponent } from 'react';
 import ResourceTree from '../data-table/ResourceTree';
 import './Sidebar.less';
 import Group from '../data-table/Group';
-import Role from '../data-table/Role';
 
 class Sidebar extends PureComponent {
   render () {
@@ -11,7 +10,6 @@ class Sidebar extends PureComponent {
       <div className="filterable-sidebar">
         <ResourceTree />
         <Group />
-        <Role />
       </div>
     );
   }

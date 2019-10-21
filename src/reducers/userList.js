@@ -1,12 +1,12 @@
 import {
   LOAD_USER_RESOURCE_FILTER,
   LOAD_USER_GROUP_FILTER,
-  LOAD_USER_ROLE_FILTER,
   LOAD_USER_LIST,
   LOAD_USER_PAGINATION,
   LOAD_NAMESPACE_DATA,
   LOAD_RESOURCE_DATA,
   SET_SELECTED_NAMESPACE,
+  SET_SELECTED_ROLE,
 } from '../constants/action-types';
 
 const initialState = {
@@ -15,7 +15,6 @@ const initialState = {
   resourcesData: [],
   resources: [],
   groups: [],
-  roles: [],
   users: [],
   pagination: {
     page: 1,
@@ -31,8 +30,6 @@ const userListReducer = (state = initialState, action) => {
       return { ...state, resources: action.payload };
     case LOAD_USER_GROUP_FILTER:
       return { ...state, groups: action.payload };
-    case LOAD_USER_ROLE_FILTER:
-      return { ...state, roles: action.payload };
     case LOAD_USER_LIST:
       return { ...state, users: action.payload };
     case LOAD_USER_PAGINATION:
@@ -51,6 +48,8 @@ const userListReducer = (state = initialState, action) => {
       return { ...state, resourcesData: action.payload || [] };
     case SET_SELECTED_NAMESPACE:
       return { ...state, selectedNamespace: action.payload };
+    case SET_SELECTED_ROLE:
+      return { ...state, selectedRole: action.payload };
     default:
       return state;
   }

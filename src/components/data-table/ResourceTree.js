@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import { Icon, Select, Tree } from 'antd';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { map } from 'lodash';
+
+import './ResourceTree.less';
 import { arborist } from '../../utils/API';
 import {
   formatTreeData,
@@ -14,6 +17,7 @@ import {
   loadNamespaceData,
   setSelectedNamespace,
   setResourceTreeData,
+  setSelectedRole,
 } from '../../actions';
 
 const { Option } = Select;
@@ -25,12 +29,25 @@ class ResourceTree extends Component {
     this.state = {
       expandedKeys: [],
       autoExpandParent: true,
+      roles: [],
     };
   }
 
   componentDidMount = async () => {
     await this.props.loadNamespaceData();
     await this.loadResourceTree();
+    await this.loadRole();
+  };
+
+  loadRole = async () => {
+    const resp = await arborist.get('/role');
+    this.setState({
+      roles: map(resp.roles, role => {
+        const copiedRole = { ...role };
+        copiedRole.checked = false;
+        return copiedRole;
+      }),
+    });
   };
 
   loadResourceTree = async () => {
@@ -58,6 +75,11 @@ class ResourceTree extends Component {
     await this.loadResourceTree();
   };
 
+  handleSelectRole = async (role) => {
+    await this.props.setSelectedRole(role);
+    await this.props.loadUserList();
+  };
+
   renderTreeNodes = data => data.map(item => {
     if (item.children) {
       return (
@@ -83,9 +105,8 @@ class ResourceTree extends Component {
     return (
       <div>
         <Select
-          style={{ width: 248, marginBottom: 6 }}
+          className="selector"
           placeholder="NAMESPACE"
-          value={this.props.selectedNamespace}
           defaultValue="DEFAULT"
           onChange={this.handleSelectNamespace}
         >
@@ -94,6 +115,22 @@ class ResourceTree extends Component {
               namespace => (
                 <Option value={namespace.path} key={namespace.path}>
                   {formatResourceName(namespace.name)}
+                </Option>
+              ),
+            )
+          }
+        </Select>
+        <Select
+          className="selector"
+          placeholder="Please select role"
+          allowClear
+          onChange={this.handleSelectRole}
+        >
+          {
+            this.state.roles.map(
+              role => (
+                <Option value={role.id}>
+                  {role.id}
                 </Option>
               ),
             )
@@ -121,11 +158,13 @@ ResourceTree.propTypes = {
   resourcesData: PropTypes.array,
   namespaces: PropTypes.array,
   selectedNamespace: PropTypes.any,
+  selectedRole: PropTypes.string,
   setUserResourceFilterData: PropTypes.func,
   loadUserList: PropTypes.func,
   loadNamespaceData: PropTypes.func,
   setSelectedNamespace: PropTypes.func,
   setResourceTreeData: PropTypes.func,
+  setSelectedRole: PropTypes.func,
 };
 
 ResourceTree.defaultProps = {
@@ -133,16 +172,13 @@ ResourceTree.defaultProps = {
   resourcesData: [],
   namespaces: [],
   selectedNamespace: null,
-  setUserResourceFilterData: () => {
-  },
-  loadUserList: () => {
-  },
-  loadNamespaceData: () => {
-  },
-  setSelectedNamespace: () => {
-  },
-  setResourceTreeData: () => {
-  },
+  selectedRole: null,
+  setUserResourceFilterData: () => {},
+  loadUserList: () => {},
+  loadNamespaceData: () => {},
+  setSelectedNamespace: () => {},
+  setResourceTreeData: () => {},
+  setSelectedRole: () => {},
 };
 
 
@@ -151,6 +187,7 @@ const mapStateToProps = state => ({
   resourcesData: state.userList.resourcesData,
   namespaces: state.userList.namespaces,
   selectedNamespace: state.userList.selectedNamespace,
+  selectedRole: state.userList.selectedRole,
 });
 
 
@@ -160,6 +197,7 @@ const mapDispatchToProps = {
   loadNamespaceData,
   setSelectedNamespace,
   setResourceTreeData,
+  setSelectedRole,
 };
 
 
