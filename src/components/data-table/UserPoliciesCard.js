@@ -4,10 +4,7 @@ import { Card, Empty } from 'antd';
 
 import AssignPermissionForm from '../user/AssignPermissionForm';
 import { arborist } from '../../utils/API';
-import {
-  unflatten,
-  formatTreeData,
-} from '../../utils/util';
+import { unflatten, formatTreeData } from '../../utils/util';
 import './UserPoliciesCard.less';
 
 
@@ -77,9 +74,9 @@ UserPoliciesCard.propTypes = {
 };
 
 UserPoliciesCard.defaultProps = {
+  onRef: () => {},
   readOnly: true,
-  onRef: () => {
-  },
 };
+
 
 export default UserPoliciesCard;
