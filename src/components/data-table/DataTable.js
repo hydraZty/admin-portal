@@ -10,10 +10,10 @@ const columns = [{
   dataIndex: 'name',
   key: 'name',
   render: (name, record) => (
-    <div className="col-name">
-      <span className="user-name">{name}</span>
-      <span className="user-email">{record.email}</span>
-      <span className="user-created-at">{record.createdAt}</span>
+    <div className="data-table__user">
+      <span className="data-table__user-name">{name}</span>
+      <span className="data-table__user-email">{record.email}</span>
+      <span className="data-table__cuser-reate-at">{record.createdAt}</span>
     </div>
   ),
 }, {
@@ -21,7 +21,7 @@ const columns = [{
   dataIndex: 'groups',
   key: 'groups',
   render: groups => (
-    <div className="col-groups">
+    <div className="data-table__groups">
       {groups.map(group => <span key={group}>{group}</span>)}
     </div>
   ),
@@ -30,7 +30,7 @@ const columns = [{
   dataIndex: 'policies',
   key: 'policies',
   render: policies => (
-    <div className="col-policies">
+    <div className="data-table__policies">
       {
         policies.map(policy => (
           <div key={policy.role} style={{ lineHeight: 2.1 }}>
@@ -39,14 +39,14 @@ const columns = [{
               <Tag
                 color="#eeedf5"
                 key={resource.policy}
-                className="resource-tag"
+                className="data-table__policies-resource-tag"
               >
                 {formatResourceName(resource.resource)}
               </Tag>
             ))}
             <span>
               {policy.resources && policy.resources.length > 2 ? (
-                <Tag color="#eeedf5" className="resource-tag more">
+                <Tag color="#eeedf5" className="data-table__policies-resource-tag--more">
                   {policy.resources.length - 2} more
                 </Tag>
               ) : ''}
@@ -84,7 +84,7 @@ class DataTable extends Component {
         pagination={false}
         rowClassName={(record, index) => {
           if (index === this.state.selectedRowIndex) {
-            return 'row-selected';
+            return 'data-table__row--select';
           }
           return '';
         }}

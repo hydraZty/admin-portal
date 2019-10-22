@@ -1,50 +1,53 @@
-@line-height:46px;
+@line-height: 46px;
 
-.assign-permission-form-item {
+.assign-permission-form__form-item {
   margin-bottom: 8px;
 }
 
-.add-role-col, .delete-role-col {
+.assign-permission-form__add-role {
   height: @line-height;
   display: flex;
   justify-content: center;
   align-items: center;
-  .icon-wrapper {
-    cursor: pointer;
-    height: 24px;
-    width: 24px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 16px;
-    color: #666;
-  }
 }
 
-.role-list-row {
+.assign-permission-form__icon-wrapper {
+  cursor: pointer;
+  height: 24px;
+  width: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  color: #666;
+}
+
+.assign-permission-form__list-row {
   line-height: @line-height;
-  .role-list-item {
-    padding-left: 12px;
-    display: flex;
-    flex-direction: row;
-    font-weight: normal;
-  }
-  .role-list-resource-tag-wrapper {
-    flex: 1;
-    line-height: 30px;
-    padding-top: 8px;
-  }
-  .resource-tag {
-    border-radius: 1px;
-    color: #3283c8;
-    height: 21px;
-    line-height: 20px;
-    font-size: 12px;
-    font-weight: bold;
-    margin-left: 8px;
-    margin-right: 0;
-  }
+}
+
+.assign-permission-form__list-item {
+  display: flex;
+  flex-direction: row;
+  font-weight: normal;
+}
+
+.resource {
+  flex: 1;
+  line-height: 30px;
+  padding-top: 8px;
   .ant-tag-has-color .anticon-close {
     color: #999;
   }
+}
+
+.resource__tag {
+  border-radius: 1px;
+  color: #3283c8;
+  height: 21px;
+  line-height: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  margin-left: 8px;
+  margin-right: 0;
 }

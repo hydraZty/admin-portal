@@ -153,13 +153,13 @@ class AddUserModal extends Component {
   render () {
     return (
       <div>
-        <div className={`container ${this.state.step !== 1 ? 'disabled' : null}`}>
+        <div className={this.state.step !== 1 ? 'add-user-modal--disabled' : null}>
           <Typography.Title level={4}>Step 1. Enter username and email</Typography.Title>
           <AddUserForm
             onRef={this.onRefAddUserForm}
           />
         </div>
-        <div className={`container ${this.state.step !== 2 ? 'disabled' : null}`}>
+        <div className={this.state.step !== 2 ? 'add-user-modal--disabled' : null}>
           <Typography.Title level={4}>Step 2. Assign Permissions to new users</Typography.Title>
           <Row>
             <Col span={21} offset={2}>
@@ -171,7 +171,7 @@ class AddUserModal extends Component {
             </Col>
           </Row>
         </div>
-        <div className={`container ${this.state.step !== 3 ? 'disabled' : null}`}>
+        <div className={this.state.step !== 3 ? 'add-user-modal--disabled' : null}>
           <Typography.Title level={4}>Step 3. Join groups</Typography.Title>
           <Row>
             <Col span={21} offset={2}>

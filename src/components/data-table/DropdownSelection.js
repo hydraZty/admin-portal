@@ -61,7 +61,7 @@ class DropdownSelection extends Component {
   };
 
   render = () => (
-    <div className="dropdown-container">
+    <div className="drop-down-selection">
       <Collapse
         bordered={false}
         defaultActiveKey={[`${this.props.path}_options`]}

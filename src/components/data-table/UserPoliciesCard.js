@@ -49,7 +49,7 @@ class UserPoliciesCard extends Component {
       <Card
         title="User Permissions"
         bordered={false}
-        className="row-detail-card"
+        className="user-policies-card"
       >
         {
           this.props.policies.length || !this.props.readOnly ? (

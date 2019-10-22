@@ -38,7 +38,7 @@ class UserPoliciesCard extends Component {
       <Card
         title="Groups"
         bordered={false}
-        className="row-detail-card"
+        className="user-group-card"
       >
         {
           this.props.groups.length || !this.props.readOnly ? (

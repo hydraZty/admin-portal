@@ -103,9 +103,9 @@ class ResourceTree extends Component {
 
   render () {
     return (
-      <div>
+      <div className="resource-tree">
         <Select
-          className="selector"
+          className="resource-tree__selector"
           placeholder="NAMESPACE"
           defaultValue="DEFAULT"
           onChange={this.handleSelectNamespace}

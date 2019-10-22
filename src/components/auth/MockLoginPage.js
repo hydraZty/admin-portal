@@ -33,10 +33,10 @@ class LoginPage extends Component {
 
   render () {
     return (
-      <div className="login-page">
+      <div className="login">
         {this.state.providers.map(provider => (
           <Button
-            className="login-button"
+            className="login__button"
             type="default"
             key={provider.id}
             onClick={() => this.onLogin(provider)}

@@ -2,7 +2,7 @@ import React from 'react';
 import { Form, Input } from 'antd';
 import PropTypes from 'prop-types';
 
-import './AddUserForm.less';
+import './EditUserForm.less';
 
 
 class AddUser extends React.Component {
@@ -22,7 +22,7 @@ class AddUser extends React.Component {
       <Form>
         <Form.Item
           required={false}
-          className="add-user-form-item"
+          className="edit-user-form__form-item"
         >
           { getFieldDecorator('username', {
             validateTrigger: ['onChange', 'onBlur'],
@@ -32,7 +32,7 @@ class AddUser extends React.Component {
 
         <Form.Item
           required={false}
-          className="add-user-form-item"
+          className="edit-user-form__form-item"
         >
           { getFieldDecorator('email', {
             validateTrigger: ['onChange', 'onBlur'],

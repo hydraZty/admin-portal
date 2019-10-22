@@ -1,17 +1,15 @@
-.dropdown-container {
+.drop-down-selection {
   margin-top: 10px;
-  /deep/ .ant-collapse-item {
+  .ant-collapse-item {
     border-bottom: none;
-    border-top: 1px solid#d9d9d9;
+    border-top: 1px solid #d9d9d9;
   }
-  /deep/ .ant-collapse-content-box {
+  .ant-collapse-content-box {
     display: flex;
     flex-direction: column;
-    .ant-checkbox-wrapper + .ant-checkbox-wrapper {
-      margin-left: 0;
-    }
+  }
+  .ant-checkbox-wrapper + .ant-checkbox-wrapper {
+    margin-left: 0;
   }
 }
-.dropdown-container + .dropdown-container {
-  margin-top: 0;
-}
+

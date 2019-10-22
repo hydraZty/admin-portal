@@ -57,7 +57,7 @@ class JoinGroups extends React.Component {
         <Row>
           <Form>
             <Col span={22}>
-              <Form.Item className="group-form-item">
+              <Form.Item className="join-groups-form__form-item">
                 {getFieldDecorator('group', {
                   rules: [{ required: true, message: 'Required' }],
                 })(
@@ -76,7 +76,7 @@ class JoinGroups extends React.Component {
               </Form.Item>
             </Col>
 
-            <Col span={2} className="add-button-col">
+            <Col span={2} className="join-groups-form__button-col">
               <div
                 role="presentation"
                 className="icon-wrapper"
@@ -89,15 +89,15 @@ class JoinGroups extends React.Component {
           </Form>
         </Row>
       )}{this.state.groupData.map((group, index) => (
-        <Row className="group-list-row">
-          <Col span={22} className="group-list-item">
+        <Row className="join-groups-form__result">
+          <Col span={22}>
             {group.name}
           </Col>
           {readOnly ? null : (
-            <Col span={2} className="delete-button-col">
+            <Col span={2} className="join-groups-form__button-col">
               <div
                 role="presentation"
-                className="icon-wrapper"
+                className="join-groups-form__icon-wrapper"
                 onClick={() => this.removeGroup(index)}
                 onKeyPress={() => this.removeGroup(index)}
               >

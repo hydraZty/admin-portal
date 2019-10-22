@@ -109,7 +109,7 @@ class AssignPermission extends React.Component {
         <Row>
           <Form>
             <Col span={8}>
-              <Form.Item className="assign-permission-form-item">
+              <Form.Item className="assign-permission-form__form-item">
                 {getFieldDecorator('role', {
                   rules: [{ required: true, message: 'Select role' }],
                 })(
@@ -131,7 +131,7 @@ class AssignPermission extends React.Component {
               </Form.Item>
             </Col>
             <Col span={14}>
-              <Form.Item className="assign-permission-form-item">
+              <Form.Item className="assign-permission-form__form-item">
                 {getFieldDecorator('resources', {
                   rules: [
                     { required: false, type: 'array' },
@@ -155,9 +155,9 @@ class AssignPermission extends React.Component {
               </Form.Item>
             </Col>
 
-            <Col span={2} className="add-role-col">
+            <Col span={2} className="assign-permission-form__add-role">
               <div
-                className="icon-wrapper"
+                className="assign-permission-form__icon-wrapper"
                 onClick={this.AddRole}
                 role="presentation"
                 onKeyPress={this.AddRole}
@@ -168,16 +168,16 @@ class AssignPermission extends React.Component {
           </Form>
         </Row>
       )}{this.state.policyData.map((row, roleIndex) => (
-        <Row className="role-list-row" key={`role-list-${row.role}`}>
-          <Col span={8} className="role-list-item">
+        <Row className="assign-permission-form__list-row" key={`role-list-${row.role}`}>
+          <Col span={8} className="assign-permission-form__list-item">
             {row.role}
           </Col>
-          <Col span={14} className="role-list-resource-tag-wrapper">
+          <Col span={14} className="resource">
             {row.resources && row.resources.map((resource, resourceIndex) => (
               <Tag
                 color="#eeedf5"
                 key={resource.resource}
-                className="resource-tag"
+                className="resource__tag"
                 closable={!readOnly}
                 onClose={() => this.removeResource(roleIndex, resourceIndex)}
               >
@@ -186,11 +186,11 @@ class AssignPermission extends React.Component {
             ))}
           </Col>
           {readOnly ? null : (
-            <Col span={2} className="delete-role-col">
+            <Col span={2} className="assign-permission-form__add-role">
               <div
                 role="presentation"
                 onKeyPress={() => this.removeRole(roleIndex)}
-                className="icon-wrapper"
+                className="assign-permission-form__icon-wrapper"
                 onClick={() => this.removeRole(roleIndex)}
               >
                 <Icon type="plus" rotate={45} />
