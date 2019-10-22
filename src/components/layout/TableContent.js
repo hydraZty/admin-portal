@@ -135,7 +135,7 @@ class TableContent extends PureComponent {
             />
           </Col>
           <Col span={10}>
-            <div className="table-pagination">
+            <div className="table-content__pagination">
               <Pagination
                 pageSize={this.props.pagination.page_size}
                 current={this.props.pagination.page}

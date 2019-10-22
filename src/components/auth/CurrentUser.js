@@ -44,9 +44,9 @@ class CurrentUser extends Component {
     let user;
     if (this.props.user) {
       user = (
-        <div className="avatar-container">
-          <Avatar icon="user" className="avatar" />
-          <span className="user-name">{this.props.user.username}</span>
+        <div className="info">
+          <Avatar icon="user" className="info__avatar" />
+          <span className="info__name">{this.props.user.username}</span>
         </div>
       );
     } else {

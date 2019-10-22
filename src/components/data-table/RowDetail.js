@@ -8,7 +8,7 @@ import { arborist } from '../../utils/API';
 import { formatPolicies } from '../../utils/util';
 import { loadUserList } from '../../actions';
 import EditUserForm from '../user/EditUserForm';
-import UserPoliciesCard from './UserPoliciesCard';
+import UserInfoCard from './UserPoliciesCard';
 import UserGroupsCard from './UserGroupCard';
 
 class RowDetail extends Component {
@@ -55,7 +55,7 @@ class RowDetail extends Component {
 
   handleSave = async () => {
     const { userInfo } = this.state;
-    const policiesFormData = this.UserPoliciesCard.submitEdit();
+    const policiesFormData = this.UserInfoCard.submitEdit();
     const groupsFormData = this.UserGroupsCard.submitEdit();
     const groups = groupsFormData.map(group => group.name);
     const policies = formatPolicies(policiesFormData);
@@ -99,7 +99,7 @@ class RowDetail extends Component {
 
 
   onRefUserPoliciesCard = (ref) => {
-    this.UserPoliciesCard = ref;
+    this.UserInfoCard = ref;
   };
 
   onRefUserGroupsCard = (ref) => {
@@ -116,8 +116,8 @@ class RowDetail extends Component {
 
     return (
       <div className="row-detail">
-        <div className="user-info">
-          <div className="info-wrapper">
+        <div className="row-detail__user-info">
+          <div className="row-detail__info-wrapper">
             <Avatar size={44} style={{ marginRight: 16 }}>
               {this.props.user.name.split(' ').slice(0, 2).map(
                 w => w[0],
@@ -125,9 +125,9 @@ class RowDetail extends Component {
             </Avatar>
             {
               readOnly ? (
-                <div className="info-inner">
-                  <span className="user-name">{this.props.user.name}</span>
-                  <span className="user-email">{this.props.user.email}</span>
+                <div className="row-detail__info-inner">
+                  <span className="row-detail__user-name">{this.props.user.name}</span>
+                  <span className="row-detail__user-email">{this.props.user.email}</span>
                 </div>
               ) :
                 <EditUserForm {...userInfo} onChange={this.handleFormChange} />
@@ -139,7 +139,7 @@ class RowDetail extends Component {
               this.renderSaveButton()
           }
         </div>
-        <UserPoliciesCard
+        <UserInfoCard
           onRef={this.onRefUserPoliciesCard}
           readOnly={readOnly}
           policies={policies}

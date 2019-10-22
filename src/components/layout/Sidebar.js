@@ -7,7 +7,7 @@ import Group from '../data-table/Group';
 class Sidebar extends PureComponent {
   render () {
     return (
-      <div className="filterable-sidebar">
+      <div className="sidebar">
         <ResourceTree />
         <Group />
       </div>

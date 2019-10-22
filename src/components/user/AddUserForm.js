@@ -63,7 +63,7 @@ class AddUser extends React.Component {
         <Col span={8}>
           <Form.Item
             required={false}
-            className="add-user-form-item"
+            className="add-user-form__form-item"
             {...other}
           >
             <label className="label" htmlFor={`name-${index}`}>
@@ -78,13 +78,13 @@ class AddUser extends React.Component {
           </Form.Item>
         </Col>
 
-        <Col span={14} className="form-item-col">
+        <Col span={14}>
           <Form.Item
             required={false}
-            className="add-user-form-item"
+            className="add-user-form__form-item"
             {...other}
           >
-            <label className="label" htmlFor={`email-${index}`}>
+            <label className="add-user-form__label" htmlFor={`email-${index}`}>
               Email Address
               {getFieldDecorator(`users[${index}].email`, {
                 validateTrigger: ['onChange', 'onBlur'],
@@ -93,10 +93,9 @@ class AddUser extends React.Component {
             </label>
           </Form.Item>
         </Col>
-        <Col span={2} className="form-item-delete-item">
+        <Col span={2} className="add-user-form__delete">
           {keys.length > 1 ? (
             <Icon
-              className="dynamic-delete-button"
               type="minus-circle-o"
               onClick={() => this.remove(key)}
             />
@@ -106,11 +105,12 @@ class AddUser extends React.Component {
     ));
 
     return (
-      <Row>
+      <Row className="add-user-form">
         <Col span={22} offset={2}>
           {formItems}
-          <Button type="dashed" onClick={this.add} className="add-button" style={{}}>
-            <Icon type="plus" /> Add field
+          <Button type="dashed" onClick={this.add} className="add-user-form__add-button">
+            <Icon type="plus" />
+            Add field
           </Button>
         </Col>
       </Row>
