@@ -8,6 +8,7 @@ import {
   SET_SELECTED_NAMESPACE,
   LOAD_RESOURCE_DATA,
   SET_SELECTED_ROLE,
+  SET_KEYWORD,
 } from '../constants/action-types';
 import { arborist, fence } from '../utils/API';
 
@@ -47,12 +48,13 @@ export const setUserGroupFilterData = (groups) => (dispatch) => dispatch({
   payload: groups,
 });
 
-export const loadUserList = () => async (dispatch, getState) => {
+export const loadUserList = (resetPagination = true) => async (dispatch, getState) => {
   const state = getState();
   const {
     selectedRole,
     resources,
     groups,
+    keyword,
   } = state.userList;
   const groupParams = [];
   const roleParams = [];
@@ -74,8 +76,9 @@ export const loadUserList = () => async (dispatch, getState) => {
       roles: roleParams,
       resources: resourceParams,
       groups: groupParams,
-      page,
+      page: resetPagination ? 1 : page,
       page_size,
+      keyword: keyword || null,
     },
   });
   dispatch({
@@ -98,3 +101,8 @@ export const setPagination = (page, pageSize, total = null) => (dispatch, getSta
     },
   });
 };
+
+export const setKeyword = (keyword) => (dispatch) => dispatch({
+  type: SET_KEYWORD,
+  payload: keyword,
+});
