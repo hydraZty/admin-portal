@@ -9,41 +9,6 @@ import RowDetail from '../data-table/RowDetail';
 import './TableContent.less';
 import { loadUserList, setPagination } from '../../actions';
 
-// const data = [{
-//   key: 1,
-//   name: 'Daisy Dai',
-//   email: 'daichen.daisy@gmail.com',
-//   createdAt: '2019-09-07 15:42',
-//   groups: ['CTDS-Mgmt'],
-//   policies: [{
-//     id: 1,
-//     roleName: 'Admin',
-//     resources: [],
-//   }, {
-//     id: 2,
-//     roleName: 'Downloader',
-//     resources: ['TCGA-BRCA', 'TCGA-LUAD', 'TCGA-BGM', 'TCGA-SKD'],
-//   }, {
-//     id: 3,
-//     roleName: 'Workspace-user',
-//     resources: ['TCGA-BRCA'],
-//   }],
-// }, {
-//   key: 2,
-//   name: 'Xenia Lu',
-//   email: 'xenia.lyy@gmail.com',
-//   createdAt: '2019-09-06 11:19',
-//   groups: ['CTDS-Dev', 'NIAID-Dev'],
-//   policies: [{
-//     id: 1,
-//     roleName: 'Admin',
-//     resources: [],
-//   }, {
-//     id: 2,
-//     roleName: 'Downloader',
-//     resources: ['TCGA-BRCA', 'TCGA-LUAD', 'TCGA-BGM'],
-//   }],
-// }];
 
 class TableContent extends PureComponent {
   constructor (props) {
@@ -96,27 +61,21 @@ class TableContent extends PureComponent {
 
   componentDidMount = async () => {
     await this.loadUsers();
-  }
+  };
 
-  loadUsers = async () => {
-    await this.props.loadUserList();
-  }
+  loadUsers = async (reset = true) => {
+    await this.props.loadUserList(reset);
+  };
 
   onChangePage = async (page, pageSize) => {
     this.props.setPagination(page, pageSize);
-    await this.loadUsers();
-  }
+    await this.loadUsers(false);
+  };
 
   onShowSizeChange = async (current, size) => {
-    await this.setState(prevState => ({
-      pagination: {
-        ...prevState.pagination,
-        page: current,
-        page_size: size,
-      },
-    }));
+    await this.props.setPagination(current, size);
     await this.loadUsers();
-  }
+  };
 
   showUserDetail = (user) => {
     this.setState({

@@ -7,6 +7,7 @@ import {
   LOAD_RESOURCE_DATA,
   SET_SELECTED_NAMESPACE,
   SET_SELECTED_ROLE,
+  SET_KEYWORD,
 } from '../constants/action-types';
 
 const initialState = {
@@ -16,6 +17,7 @@ const initialState = {
   resources: [],
   groups: [],
   users: [],
+  keyword: '',
   pagination: {
     page: 1,
     page_size: 10,
@@ -50,6 +52,8 @@ const userListReducer = (state = initialState, action) => {
       return { ...state, selectedNamespace: action.payload };
     case SET_SELECTED_ROLE:
       return { ...state, selectedRole: action.payload };
+    case SET_KEYWORD:
+      return { ...state, keyword: action.payload };
     default:
       return state;
   }

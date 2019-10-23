@@ -121,7 +121,7 @@ class ResourceTree extends Component {
           }
         </Select>
         <Select
-          className="selector"
+          className="resource-tree__selector"
           placeholder="Please select role"
           allowClear
           onChange={this.handleSelectRole}
@@ -129,7 +129,7 @@ class ResourceTree extends Component {
           {
             this.state.roles.map(
               role => (
-                <Option value={role.id}>
+                <Option value={role.id} key={role.id}>
                   {role.id}
                 </Option>
               ),
