@@ -1,3 +1,5 @@
+@sub-line-height:32px;
+
 .join-groups-form__form-item {
   margin-bottom: 8px;
 }
@@ -22,4 +24,35 @@
 
 .join-groups-form__result {
   line-height: 38px;
+}
+
+.join-groups-form__list-row {
+  line-height: @sub-line-height;
+}
+
+.join-groups-form__line-wrapper{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: @sub-line-height;
+}
+
+.join-groups-form__horizontal-line {
+  width: 10px;
+  height: 1px;
+  background-color: #999;
+  border-width:0;
+}
+
+.join-groups-form__list-item {
+  font-size: 12px;
+  display: flex;
+  color: #999;
+  flex-direction: row;
+  font-weight: normal;
+}
+
+.resource--sub-resource {
+  line-height: 22px;
+  padding-top: 4px;
 }

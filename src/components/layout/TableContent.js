@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { Col, Pagination, Row } from 'antd';
-import { find, map, cloneDeep } from 'lodash';
+import { find, cloneDeep } from 'lodash';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -22,9 +22,36 @@ class TableContent extends PureComponent {
   static getDerivedStateFromProps(props, state) {
     const users = [];
     let selectedUser = cloneDeep(state.selectedUser);
-    map(props.users, user => {
+    props.users.forEach(user => {
+      const groupsWithPolicies = [];
+      user.groups_with_policies.forEach(group => {
+        const groupPolicies = [];
+        group.policies.forEach(policy => {
+          const currentPolicy = find(groupPolicies, d => d.role === policy.role);
+          if (currentPolicy) {
+            currentPolicy.resources.push({
+              resource: policy.resource,
+              policy: policy.policy,
+              expires_at: policy.expires_at,
+            });
+          } else {
+            groupPolicies.push({
+              role: policy.role,
+              resources: [{
+                resource: policy.resource,
+                policy: policy.policy,
+                expires_at: policy.expires_at,
+              }],
+            });
+          }
+        });
+        groupsWithPolicies.push({
+          name: group.name,
+          policies: groupPolicies,
+        });
+      });
       const policies = [];
-      map(user.policies, policy => {
+      user.policies.forEach(policy => {
         const currentPolicy = find(policies, d => d.role === policy.role);
         if (currentPolicy) {
           currentPolicy.resources.push({
@@ -46,6 +73,7 @@ class TableContent extends PureComponent {
       const copiedUser = {
         ...user,
         policies,
+        groups_with_policies: groupsWithPolicies,
       };
       if (selectedUser === null) {
         selectedUser = copiedUser;

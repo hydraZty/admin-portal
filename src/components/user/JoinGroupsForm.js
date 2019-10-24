@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Form, Icon, Row, Col, Select,
+  Form, Icon, Row, Col, Select, Tag,
 } from 'antd';
 import PropTypes from 'prop-types';
 
@@ -92,6 +92,29 @@ class JoinGroups extends React.Component {
         <Row className="join-groups-form__result">
           <Col span={22}>
             {group.name}
+            { readOnly && group.policies && group.policies.map((row) => (
+              <Row className="join-groups-form__list-row" key={`group-role-list-${row.role}`}>
+                <Col span={2} className="join-groups-form__line-wrapper">
+                  <hr className="join-groups-form__horizontal-line" />
+                </Col>
+                <Col span={8} className="join-groups-form__list-item">
+                  {row.role}
+                </Col>
+                <Col span={14} className="resource resource--sub-resource">
+                  {row.resources && row.resources.map((resource) => (
+                    resource.resource ? (
+                      <Tag
+                        color="#eeedf5"
+                        key={resource.resource}
+                        className="resource__tag"
+                      >
+                        {resource.resource}
+                      </Tag>
+                    ) : null
+                  ))}
+                </Col>
+              </Row>
+            ))}
           </Col>
           {readOnly ? null : (
             <Col span={2} className="join-groups-form__button-col">
