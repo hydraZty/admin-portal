@@ -7,11 +7,11 @@ import { formatResourceName } from '../../utils/util';
 
 const columns = [{
   title: 'User',
-  dataIndex: 'display_name',
-  key: 'display_name',
+  dataIndex: 'preferred_username',
+  key: 'preferred_username',
   render: (name, record) => (
     <div className="data-table__user">
-      <span className="data-table__user-name">{record.display_name ? record.display_name : record.name}</span>
+      <span className="data-table__user-name">{record.preferred_username || record.name}</span>
       <span className="data-table__user-email">{record.email}</span>
       <span className="data-table__cuser-reate-at">{record.created_at}</span>
     </div>

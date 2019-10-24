@@ -19,7 +19,12 @@ class RowDetail extends Component {
       this.state = {
         readOnly: true,
         userInfo: {
+          // preferred_username or account
           username: {
+            value: user.preferred_username || user.name,
+          },
+          // account
+          name: {
             value: user.name,
           },
           email: {
@@ -44,6 +49,9 @@ class RowDetail extends Component {
       readOnly: true,
       userInfo: {
         username: {
+          value: user.preferred_username || user.name,
+        },
+        name: {
           value: user.name,
         },
         email: {
@@ -61,8 +69,10 @@ class RowDetail extends Component {
     const policies = formatPolicies(policiesFormData);
     try {
       await arborist.put(`/user/${this.props.user.name}`, {
-        name: userInfo.username.value,
+        name: this.props.user.name,
+        preferred_username: userInfo.username.value,
         email: userInfo.email.value,
+        active: this.props.user.active,
         policies,
         groups,
       });
@@ -113,20 +123,20 @@ class RowDetail extends Component {
     const {
       readOnly, userInfo, policies, groups,
     } = this.state;
-
+    const name = this.props.user.preferred_username || this.props.user.name;
     return (
       <div className="row-detail">
         <div className="row-detail__user-info">
           <div className="row-detail__info-wrapper">
             <Avatar size={44} style={{ marginRight: 16 }}>
-              {this.props.user.name.split(' ').slice(0, 2).map(
+              {name.split(' ').slice(0, 2).map(
                 w => w[0],
               )}
             </Avatar>
             {
               readOnly ? (
                 <div className="row-detail__info-inner">
-                  <span className="row-detail__user-name">{this.props.user.name}</span>
+                  <span className="row-detail__user-name">{name}</span>
                   <span className="row-detail__user-email">{this.props.user.email}</span>
                 </div>
               ) :
@@ -159,6 +169,8 @@ class RowDetail extends Component {
 RowDetail.propTypes = {
   user: PropTypes.shape({
     name: PropTypes.string,
+    preferred_username: PropTypes.string,
+    active: PropTypes.bool,
     email: PropTypes.string,
     policies: PropTypes.array,
     groups_with_policies: PropTypes.array,
