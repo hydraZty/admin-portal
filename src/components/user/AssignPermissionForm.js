@@ -174,15 +174,17 @@ class AssignPermission extends React.Component {
           </Col>
           <Col span={14} className="resource">
             {row.resources && row.resources.map((resource, resourceIndex) => (
-              <Tag
-                color="#eeedf5"
-                key={resource.resource}
-                className="resource__tag"
-                closable={!readOnly}
-                onClose={() => this.removeResource(roleIndex, resourceIndex)}
-              >
-                {resource.resource}
-              </Tag>
+              resource.resource ? (
+                <Tag
+                  color="#eeedf5"
+                  key={resource.resource}
+                  className="resource__tag"
+                  closable={!readOnly}
+                  onClose={() => this.removeResource(roleIndex, resourceIndex)}
+                >
+                  {resource.resource}
+                </Tag>
+              ) : null
             ))}
           </Col>
           {readOnly ? null : (

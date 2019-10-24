@@ -88,7 +88,10 @@ class AddUser extends React.Component {
               Email Address
               {getFieldDecorator(`users[${index}].email`, {
                 validateTrigger: ['onChange', 'onBlur'],
-                rules: [requireRule],
+                rules: [requireRule, {
+                  type: 'email',
+                  message: 'The input is not valid E-mail!',
+                }],
               })(<Input style={{ width: '100%' }} id={`email-${index}`} />)}
             </label>
           </Form.Item>

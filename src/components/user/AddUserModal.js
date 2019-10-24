@@ -103,51 +103,39 @@ class AddUserModal extends Component {
       }));
     } else {
       Modal.error({
-        title: 'Missing Users',
+        title: 'Please enter user',
       });
     }
   }
 
   handleSubmitSecondStep () {
     const policies = this.assignPermissionForm.handleSubmit();
-    if (policies && policies.length) {
-      this.setState(prevState => ({
-        policies,
-        step: prevState.step + 1,
-      }));
-    } else {
-      Modal.error({
-        title: 'Missing Policies',
-      });
-    }
+    this.setState(prevState => ({
+      policies,
+      step: prevState.step + 1,
+    }));
   }
 
   async handleSubmitThirdStep () {
     const groups = this.joinGroupsForm.handleSubmit();
-    if (groups && groups.length) {
-      const policies = formatPolicies(this.state.policies);
-      const content = {
-        users: this.state.users,
-        policies,
-        groups: groups.map(group => group.name),
-      };
+    const policies = formatPolicies(this.state.policies);
+    const content = {
+      users: this.state.users,
+      policies,
+      groups: groups.map(group => group.name),
+    };
 
-      try {
-        await arborist.post('/users', content);
-        this.props.loadUserList();
-        this.props.closeModal();
-      } catch (e) {
-        Modal.error({
-          title: 'Create User Fail',
-        });
-        return false;
-      }
-    } else {
+    try {
+      await arborist.post('/users', content);
+      this.props.loadUserList();
+      this.props.closeModal();
+      return false;
+    } catch (e) {
       Modal.error({
-        title: 'Missing Groups',
+        title: 'Create User Fail',
       });
+      return false;
     }
-    return false;
   }
 
   render () {
