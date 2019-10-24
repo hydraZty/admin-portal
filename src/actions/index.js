@@ -9,6 +9,7 @@ import {
   LOAD_RESOURCE_DATA,
   SET_SELECTED_ROLE,
   SET_KEYWORD,
+  SET_USER_LIST_LOADING,
 } from '../constants/action-types';
 import { arborist, fence } from '../utils/API';
 
@@ -50,6 +51,10 @@ export const setUserGroupFilterData = (groups) => (dispatch) => dispatch({
 
 export const loadUserList = (resetPagination = true) => async (dispatch, getState) => {
   const state = getState();
+  dispatch({
+    type: SET_USER_LIST_LOADING,
+    payload: true,
+  });
   const {
     selectedRole,
     resources,
@@ -88,6 +93,10 @@ export const loadUserList = (resetPagination = true) => async (dispatch, getStat
   dispatch({
     type: LOAD_USER_PAGINATION,
     payload: resp.pagination,
+  });
+  dispatch({
+    type: SET_USER_LIST_LOADING,
+    payload: false,
   });
 };
 

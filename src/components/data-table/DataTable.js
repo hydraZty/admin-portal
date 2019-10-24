@@ -9,6 +9,7 @@ const columns = [{
   title: 'User',
   dataIndex: 'preferred_username',
   key: 'preferred_username',
+  width: 220,
   render: (name, record) => (
     <div className="data-table__user">
       <span className="data-table__user-name">{record.preferred_username || record.name}</span>
@@ -20,6 +21,7 @@ const columns = [{
   title: 'Groups',
   dataIndex: 'groups',
   key: 'groups',
+  width: 130,
   render: groups => (
     <div className="data-table__groups">
       {groups.map(group => <span key={group}>{group}</span>)}
@@ -36,13 +38,15 @@ const columns = [{
           <div key={policy.role} style={{ lineHeight: 2.1 }}>
             <span style={{ marginRight: 6 }}>{policy.role}</span>
             {policy.resources && policy.resources.slice(0, 2).map(resource => (
-              <Tag
-                color="#eeedf5"
-                key={resource.policy}
-                className="data-table__policies-resource-tag"
-              >
-                {formatResourceName(resource.resource)}
-              </Tag>
+              resource.resource ? (
+                <Tag
+                  color="#eeedf5"
+                  key={resource.policy}
+                  className="data-table__policies-resource-tag"
+                >
+                  {formatResourceName(resource.resource)}
+                </Tag>
+              ) : null
             ))}
             <span>
               {policy.resources && policy.resources.length > 2 ? (
@@ -90,6 +94,7 @@ class DataTable extends Component {
         }}
         scroll={{ y: this.scrollHeight() }}
         rowKey={(record) => record.name}
+        loading={this.props.loading}
         onRow={(record, index) => ({
           onClick: () => {
             this.selectRow(record, index);
@@ -103,10 +108,12 @@ class DataTable extends Component {
 DataTable.propTypes = {
   dataSource: PropTypes.array,
   onRowSelect: PropTypes.func,
+  loading: PropTypes.bool,
 };
 
 DataTable.defaultProps = {
   dataSource: [],
+  loading: false,
   onRowSelect: () => {
   },
 };

@@ -8,6 +8,7 @@ import {
   SET_SELECTED_NAMESPACE,
   SET_SELECTED_ROLE,
   SET_KEYWORD,
+  SET_USER_LIST_LOADING,
 } from '../constants/action-types';
 
 const initialState = {
@@ -23,6 +24,7 @@ const initialState = {
     page_size: 10,
     total_count: 0,
   },
+  loading: false,
 };
 
 const userListReducer = (state = initialState, action) => {
@@ -54,6 +56,8 @@ const userListReducer = (state = initialState, action) => {
       return { ...state, selectedRole: action.payload };
     case SET_KEYWORD:
       return { ...state, keyword: action.payload };
+    case SET_USER_LIST_LOADING:
+      return { ...state, loading: action.payload };
     default:
       return state;
   }

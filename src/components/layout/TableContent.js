@@ -91,6 +91,7 @@ class TableContent extends PureComponent {
             <DataTable
               dataSource={this.state.users}
               onRowSelect={(user) => this.showUserDetail(user)}
+              loading={this.props.loading}
             />
           </Col>
           <Col span={10}>
@@ -122,6 +123,7 @@ TableContent.propTypes = {
   users: PropTypes.array,
   loadUserList: PropTypes.func,
   setPagination: PropTypes.func,
+  loading: PropTypes.bool,
 };
 
 TableContent.defaultProps = {
@@ -133,12 +135,14 @@ TableContent.defaultProps = {
   users: [],
   loadUserList: () => {},
   setPagination: () => {},
+  loading: false,
 };
 
 
 const mapStateToProps = state => ({
   pagination: state.userList.pagination,
   users: state.userList.users,
+  loading: state.userList.loading,
 });
 
 
