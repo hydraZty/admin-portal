@@ -4,7 +4,7 @@ import { Avatar, Button } from 'antd';
 
 import './RowDetail.less';
 import { connect } from 'react-redux';
-import { arborist } from '../../utils/API';
+import { arborist, fence } from '../../utils/API';
 import { formatPolicies } from '../../utils/util';
 import { loadUserList } from '../../actions';
 import EditUserForm from '../user/EditUserForm';
@@ -41,6 +41,13 @@ class RowDetail extends Component {
     this.setState({
       readOnly: false,
     });
+  };
+
+  handleDisable = async () => {
+    await fence.put(`/admin/user/${this.props.user.name}`, {
+      active: !this.props.user.active,
+    });
+    this.props.loadUserList();
   };
 
   handleCancel = () => {
@@ -89,7 +96,7 @@ class RowDetail extends Component {
 
   renderEditButton = () => (
     <div className="actions">
-      <Button>Disable</Button>
+      <Button onClick={this.handleDisable}>{this.props.user.active ? 'Disable' : 'Enable'}</Button>
       <Button type="primary" onClick={this.handleEdit}>Edit</Button>
     </div>
   );
