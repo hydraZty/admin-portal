@@ -51,7 +51,7 @@ class ResourceTree extends Component {
   };
 
   loadResourceTree = async () => {
-    const resp = await arborist.get(`/resource/namespace?path=${this.props.selectedNamespace}`);
+    const resp = await arborist.get(`/resource/namespace/${this.props.selectedNamespace}`);
     const resources = formatTreeData(resp.resources);
     this.props.setResourceTreeData(unflatten(resources));
   };
