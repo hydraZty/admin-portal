@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Tag } from 'antd';
+import { Icon, Table, Tag } from 'antd';
 
 import './DataTable.less';
 import { formatResourceName } from '../../utils/util';
@@ -12,7 +12,7 @@ const columns = [{
   width: 220,
   render: (name, record) => (
     <div className="data-table__user">
-      <span className="data-table__user-name">{record.preferred_username || record.name}</span>
+      <span className={record.active ? 'data-table__user-name' : 'data-table__user-name data-table__user-name-active'}>{!record.active ? <Icon type="stop" className="data-table__disable-icon" /> : null}{record.preferred_username || record.name}</span>
       <span className="data-table__user-email">{record.email}</span>
       <span className="data-table__cuser-reate-at">{record.created_at}</span>
     </div>
