@@ -10,7 +10,10 @@ import AddUserForm from './AddUserForm';
 import AssignPermissionForm from './AssignPermissionForm';
 import JoinGroupsForm from './JoinGroupsForm';
 import { arborist } from '../../utils/API';
-import { unflatten, formatPolicies, formatTreeData } from '../../utils/util';
+import {
+  formatPolicies,
+  formatNamespaceTree,
+} from '../../utils/util';
 import './AddUserModal.less';
 
 
@@ -48,9 +51,8 @@ class AddUserModal extends Component {
 
   loadResourceOptions = async () => {
     const resp = await arborist.get('/resource');
-    const resources = formatTreeData(resp.resources);
     this.setState({
-      resourceOptions: unflatten(resources),
+      resourceOptions: formatNamespaceTree(resp.resources),
     });
   };
 

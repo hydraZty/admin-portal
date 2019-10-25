@@ -1,4 +1,6 @@
-import { filter, forEach, toUpper } from 'lodash';
+import {
+  filter, find, forEach, toUpper,
+} from 'lodash';
 
 const INVISIBLE_NODES = ['programs', 'projects'];
 
@@ -79,4 +81,31 @@ export const formatPolicies = (policiesFormData) => {
     }
   });
   return policies;
+};
+
+export const formatNamespaceTree = (respResources) => {
+  const resources = formatTreeData(respResources);
+  const unFlattenResources = unflatten(resources);
+  const resourceOptions = [];
+  unFlattenResources.forEach(res => {
+    if (!res.namespace) {
+      let currentDefaultNamespace = find(resourceOptions, option => option.name === 'default');
+      if (!currentDefaultNamespace) {
+        currentDefaultNamespace = {
+          name: 'default',
+          path: '',
+          tag: '',
+          description: '',
+          namespace: true,
+          children: [res],
+        };
+        resourceOptions.push(currentDefaultNamespace);
+      } else {
+        currentDefaultNamespace.children.push(res);
+      }
+    } else {
+      resourceOptions.push(res);
+    }
+  });
+  return resourceOptions;
 };

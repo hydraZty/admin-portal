@@ -80,6 +80,7 @@ class AssignPermission extends React.Component {
           key={item.path}
           value={item.path}
           disabled={disable}
+          disableCheckbox={!!item.namespace}
         >
           {this.renderTreeNodes(item.children, disableChildren)}
         </TreeSelect.TreeNode>
@@ -90,6 +91,7 @@ class AssignPermission extends React.Component {
         key={item.path}
         title={item.name}
         value={item.path}
+        disableCheckbox={!!item.namespace}
         {...item}
       />
     );

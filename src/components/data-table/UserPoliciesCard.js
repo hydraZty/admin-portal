@@ -4,7 +4,9 @@ import { Card, Empty } from 'antd';
 
 import AssignPermissionForm from '../user/AssignPermissionForm';
 import { arborist } from '../../utils/API';
-import { unflatten, formatTreeData } from '../../utils/util';
+import {
+  formatNamespaceTree,
+} from '../../utils/util';
 import './UserPoliciesCard.less';
 
 
@@ -38,9 +40,8 @@ class UserPoliciesCard extends Component {
 
   loadResourceOptions = async () => {
     const resp = await arborist.get('/resource');
-    const resources = formatTreeData(resp.resources);
     this.setState({
-      resourceOptions: unflatten(resources),
+      resourceOptions: formatNamespaceTree(resp.resources),
     });
   };
 
