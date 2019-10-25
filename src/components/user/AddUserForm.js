@@ -60,7 +60,7 @@ class AddUser extends React.Component {
 
     const formItems = keys.map((key, index) => (
       <Row gutter={8} key={key}>
-        <Col span={8}>
+        <Col span={6}>
           <Form.Item
             required={false}
             className="add-user-form__form-item"
@@ -78,7 +78,26 @@ class AddUser extends React.Component {
           </Form.Item>
         </Col>
 
-        <Col span={14}>
+        <Col span={6}>
+          <Form.Item
+            required={false}
+            className="add-user-form__form-item"
+            {...other}
+          >
+            <label className="label" htmlFor={`name-${index}`}>
+              Display Name
+              <Row>
+                {getFieldDecorator(`users[${index}].preferred_username`, {
+                  validateTrigger: ['onChange', 'onBlur'],
+                  rules: [requireRule],
+                })(<Input style={{ width: '100%' }} id={`name-${index}`} />)}
+              </Row>
+            </label>
+          </Form.Item>
+        </Col>
+
+
+        <Col span={10}>
           <Form.Item
             required={false}
             className="add-user-form__form-item"
