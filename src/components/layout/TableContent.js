@@ -21,7 +21,7 @@ class TableContent extends PureComponent {
 
   static getDerivedStateFromProps(props, state) {
     const users = [];
-    let selectedUser = cloneDeep(state.selectedUser);
+    let selectedUser = null;
     props.users.forEach(user => {
       const groupsWithPolicies = [];
       user.groups_with_policies.forEach(group => {
@@ -75,11 +75,14 @@ class TableContent extends PureComponent {
         policies,
         groups_with_policies: groupsWithPolicies,
       };
-      if (selectedUser === null) {
-        selectedUser = copiedUser;
+      if (state.selectedUser !== null && copiedUser.name === state.selectedUser.name) {
+        selectedUser = cloneDeep(copiedUser);
       }
       users.push(copiedUser);
     });
+    if (selectedUser == null) {
+      selectedUser = users.length > 0 ? users[0] : null;
+    }
     return {
       ...state,
       users,
