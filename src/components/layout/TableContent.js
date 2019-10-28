@@ -108,7 +108,7 @@ class TableContent extends PureComponent {
 
   render () {
     const selectedUser =
-      this.state.users.length - 1 > this.state.selectedUserIndex ?
+      this.state.users.length > this.state.selectedUserIndex ?
         cloneDeep(this.state.users[this.state.selectedUserIndex]) : null;
     return (
       <div className="table-content">

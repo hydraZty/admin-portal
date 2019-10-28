@@ -5,6 +5,7 @@ import {
 import PropTypes from 'prop-types';
 
 import './JoinGroupsForm.less';
+import { formatResourceName } from '../../utils/util';
 
 class JoinGroups extends React.Component {
   constructor (props) {
@@ -89,7 +90,7 @@ class JoinGroups extends React.Component {
           </Form>
         </Row>
       )}{this.state.groupData.map((group, index) => (
-        <Row className="join-groups-form__result">
+        <Row className="join-groups-form__result" key={`join-groups-from-${group.name}`}>
           <Col span={22}>
             {group.name}
             { readOnly && group.policies && group.policies.map((row) => (
@@ -108,7 +109,7 @@ class JoinGroups extends React.Component {
                         key={resource.resource}
                         className="resource__tag"
                       >
-                        {resource.resource}
+                        {formatResourceName(resource.resource)}
                       </Tag>
                     ) : null
                   ))}

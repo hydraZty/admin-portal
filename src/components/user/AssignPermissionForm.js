@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 
 import './AssignPermissionForm.less';
+import { formatResourceName } from '../../utils/util';
 
 
 class AssignPermission extends React.Component {
@@ -76,7 +77,7 @@ class AssignPermission extends React.Component {
       }
       return (
         <TreeSelect.TreeNode
-          title={item.name}
+          title={formatResourceName(item.name)}
           key={item.path}
           value={item.path}
           disabled={disable}
@@ -184,7 +185,7 @@ class AssignPermission extends React.Component {
                   closable={!readOnly}
                   onClose={() => this.removeResource(roleIndex, resourceIndex)}
                 >
-                  {resource.resource}
+                  {formatResourceName(resource.resource)}
                 </Tag>
               ) : null
             ))}
