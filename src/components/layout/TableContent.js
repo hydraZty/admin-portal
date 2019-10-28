@@ -14,14 +14,13 @@ class TableContent extends PureComponent {
   constructor (props) {
     super(props);
     this.state = {
-      selectedUser: null,
+      selectedUserIndex: 0,
       users: [],
     };
   }
 
   static getDerivedStateFromProps(props, state) {
     const users = [];
-    let selectedUser = null;
     props.users.forEach(user => {
       const groupsWithPolicies = [];
       user.groups_with_policies.forEach(group => {
@@ -75,18 +74,11 @@ class TableContent extends PureComponent {
         policies,
         groups_with_policies: groupsWithPolicies,
       };
-      if (state.selectedUser !== null && copiedUser.name === state.selectedUser.name) {
-        selectedUser = cloneDeep(copiedUser);
-      }
       users.push(copiedUser);
     });
-    if (selectedUser == null) {
-      selectedUser = users.length > 0 ? users[0] : null;
-    }
     return {
       ...state,
       users,
-      selectedUser,
     };
   }
 
@@ -101,27 +93,35 @@ class TableContent extends PureComponent {
   onChangePage = async (page, pageSize) => {
     this.props.setPagination(page, pageSize);
     await this.loadUsers(false);
+    this.setState({
+      selectedUserIndex: 0,
+    });
   };
 
   onShowSizeChange = async (current, size) => {
     await this.props.setPagination(current, size);
     await this.loadUsers();
-  };
-
-  showUserDetail = (user) => {
     this.setState({
-      selectedUser: user,
+      selectedUserIndex: 0,
     });
   };
 
   render () {
+    const selectedUser =
+      this.state.users.length - 1 > this.state.selectedUserIndex ?
+        cloneDeep(this.state.users[this.state.selectedUserIndex]) : null;
     return (
       <div className="table-content">
         <Row>
           <Col span={14}>
             <DataTable
               dataSource={this.state.users}
-              onRowSelect={(user) => this.showUserDetail(user)}
+              onRowSelect={(index) => {
+                this.setState({
+                  selectedUserIndex: index,
+                });
+              }}
+              selectedIndex={this.state.selectedUserIndex}
               loading={this.props.loading}
             />
           </Col>
@@ -139,8 +139,8 @@ class TableContent extends PureComponent {
               />
             </div>
             <RowDetail
-              user={this.state.selectedUser}
-              key={JSON.stringify(this.state.selectedUser)}
+              user={selectedUser}
+              key={JSON.stringify(selectedUser)}
             />
           </Col>
         </Row>

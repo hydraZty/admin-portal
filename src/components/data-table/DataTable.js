@@ -64,18 +64,8 @@ const columns = [{
 
 
 class DataTable extends Component {
-  constructor (props) {
-    super(props);
-    this.state = {
-      selectedRowIndex: 0,
-    };
-  }
-
   selectRow = (record, index) => {
-    this.setState({
-      selectedRowIndex: index,
-    });
-    this.props.onRowSelect(record);
+    this.props.onRowSelect(index);
   };
 
   scrollHeight = () => window.innerHeight - 64 - 32 - 54;
@@ -87,7 +77,7 @@ class DataTable extends Component {
         dataSource={this.props.dataSource}
         pagination={false}
         rowClassName={(record, index) => {
-          if (index === this.state.selectedRowIndex) {
+          if (index === this.props.selectedIndex) {
             return 'data-table__row--select';
           }
           return '';
@@ -109,11 +99,13 @@ DataTable.propTypes = {
   dataSource: PropTypes.array,
   onRowSelect: PropTypes.func,
   loading: PropTypes.bool,
+  selectedIndex: PropTypes.number,
 };
 
 DataTable.defaultProps = {
   dataSource: [],
   loading: false,
+  selectedIndex: 0,
   onRowSelect: () => {
   },
 };
