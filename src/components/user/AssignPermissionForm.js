@@ -80,6 +80,7 @@ class AssignPermission extends React.Component {
           title={formatResourceName(item.name)}
           key={item.path}
           value={item.path}
+          className={item.namespace ? 'assign-permission-form__tree-node--disabled' : null}
           disabled={disable}
           disableCheckbox={!!item.namespace}
         >
@@ -151,6 +152,7 @@ class AssignPermission extends React.Component {
                     treeCheckStrictly
                     onChange={this.onChange}
                     placeholder="Select resource (Searchable)"
+                    treeDefaultExpandedKeys={['default']}
                   >
                     {this.renderTreeNodes(this.props.resourceOptions)}
                   </TreeSelect>,

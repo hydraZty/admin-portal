@@ -93,7 +93,7 @@ export const formatNamespaceTree = (respResources) => {
       if (!currentDefaultNamespace) {
         currentDefaultNamespace = {
           name: 'default',
-          path: '',
+          path: 'default',
           tag: '',
           description: '',
           namespace: true,
