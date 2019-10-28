@@ -11,6 +11,7 @@ import {
   SET_KEYWORD,
   SET_USER_LIST_LOADING,
 } from '../constants/action-types';
+// eslint-disable-next-line import/no-cycle
 import { arborist, fence } from '../utils/API';
 
 
@@ -75,7 +76,6 @@ export const loadUserList = (resetPagination = true) => async (dispatch, getStat
   });
   // eslint-disable-next-line camelcase
   const { page, page_size } = state.userList.pagination;
-  // eslint-disable-next-line camelcase
   const resp = await arborist.get('/user', {
     params: {
       roles: roleParams,
@@ -115,3 +115,14 @@ export const setKeyword = (keyword) => (dispatch) => dispatch({
   type: SET_KEYWORD,
   payload: keyword,
 });
+
+export const emptyStore = () => async (dispatch) => {
+  dispatch({
+    type: LOAD_USER_LIST,
+    payload: [],
+  });
+  dispatch({
+    type: LOAD_USER_DATA,
+    payload: null,
+  });
+};

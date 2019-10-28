@@ -90,7 +90,7 @@ class JoinGroups extends React.Component {
           </Form>
         </Row>
       )}{this.state.groupData.map((group, index) => (
-        <Row className="join-groups-form__result" key={`join-groups-from-${group.name}`}>
+        <Row className="join-groups-form__result" key={group.name}>
           <Col span={22}>
             {group.name}
             { readOnly && group.policies && group.policies.map((row) => (

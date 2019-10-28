@@ -133,9 +133,6 @@ class AddUserModal extends Component {
       this.props.closeModal();
       return false;
     } catch (e) {
-      Modal.error({
-        title: 'Create User Fail',
-      });
       return false;
     }
   }
