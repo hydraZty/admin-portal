@@ -47,10 +47,14 @@ class AssignPermission extends React.Component {
       if (!err) {
         const newValues = {};
         newValues.role = values.role.label;
-        newValues.resources = values.resources ? values.resources.map(resource => ({
-          policy: `${resource.value.slice(1).replace(/\//ig, '.')}-${newValues.role}`,
-          resource: resource.label,
-        })) : [];
+        newValues.resources = values.resources ? values.resources.map(resource => {
+          let { value } = resource;
+          value = JSON.parse(value);
+          return {
+            policy: `${value.path.slice(1).replace(/\//ig, '.')}-${newValues.role}`,
+            resource: value.name,
+          };
+        }) : [];
         this.setState(prevState => ({
           policyData: prevState.policyData.concat(newValues),
         }));
@@ -66,36 +70,33 @@ class AssignPermission extends React.Component {
     if (disable) {
       _.remove(this.state.results, (r) => r.value === item.path);
     }
-    if (item.children) {
-      let disableChildren;
-      if (disable) {
-        // Child nodes recursively disabled
-        disableChildren = true;
-      } else {
-        const values = this.state.results.map(v => v.value);
-        disableChildren = values.includes(item.path);
-      }
-      return (
-        <TreeSelect.TreeNode
-          title={item.name}
-          key={item.path}
-          value={item.path}
-          className={item.namespace ? 'assign-permission-form__tree-node--disabled' : null}
-          disabled={disable}
-          disableCheckbox={!!item.namespace}
-        >
-          {this.renderTreeNodes(item.children, disableChildren)}
-        </TreeSelect.TreeNode>
-      );
+    const value = {
+      path: item.path,
+      name: item.name,
+    };
+    let disableChildren;
+    if (disable) {
+      // Child nodes recursively disabled
+      disableChildren = true;
+    } else {
+      const values = this.state.results.map(v => {
+        const temp = JSON.parse(v.value);
+        return temp.path;
+      });
+      disableChildren = values.includes(item.path);
     }
     return (
       <TreeSelect.TreeNode
-        key={item.path}
-        title={item.name}
-        value={item.path}
+        title={formatResourceName(item.name)}
+        key={JSON.stringify(value)}
+        value={JSON.stringify(value)}
+        className={item.namespace ? 'assign-permission-form__tree-node--disabled' : null}
+        disabled={disable}
         disableCheckbox={!!item.namespace}
-        {...item}
-      />
+      >
+        { item.children && item.children.length > 0 ?
+          this.renderTreeNodes(item.children, disableChildren) : null }
+      </TreeSelect.TreeNode>
     );
   });
 
@@ -150,6 +151,9 @@ class AssignPermission extends React.Component {
                     multiple
                     treeCheckable
                     treeCheckStrictly
+                    filterTreeNode={((inputValue, treeNode) => (
+                      _.lowerCase(treeNode.props.title).indexOf(_.lowerCase(inputValue)) >= 0
+                    ))}
                     onChange={this.onChange}
                     placeholder="Select resource (Searchable)"
                     treeDefaultExpandedKeys={['default']}
