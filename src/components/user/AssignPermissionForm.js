@@ -77,7 +77,7 @@ class AssignPermission extends React.Component {
       }
       return (
         <TreeSelect.TreeNode
-          title={formatResourceName(item.name)}
+          title={item.name}
           key={item.path}
           value={item.path}
           className={item.namespace ? 'assign-permission-form__tree-node--disabled' : null}
