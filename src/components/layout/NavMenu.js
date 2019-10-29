@@ -26,7 +26,7 @@ class NavMenu extends Component {
         className="nav-menu"
       >
         <Menu.Item key="users">USERS</Menu.Item>
-        <Menu.Item key="groups">GROUPS</Menu.Item>
+        <Menu.Item key="groups" disabled>GROUPS</Menu.Item>
         <Menu.Item key="clients" disabled>CLIENTS</Menu.Item>
         <Menu.Item key="roles-permissions" disabled>
           ROLES & PERMISSIONS

@@ -17,7 +17,6 @@ class RowDetail extends Component {
     const { user } = this.props;
     if (user) {
       this.state = {
-        readOnly: true,
         userInfo: {
           // preferred_username or account
           username: {
@@ -38,9 +37,7 @@ class RowDetail extends Component {
   }
 
   handleEdit = () => {
-    this.setState({
-      readOnly: false,
-    });
+    this.props.setReadonly(false);
   };
 
   handleDisable = async () => {
@@ -51,9 +48,9 @@ class RowDetail extends Component {
   };
 
   handleCancel = () => {
-    const { user } = this.props;
+    const { user, setReadonly } = this.props;
+    setReadonly(true);
     this.setState({
-      readOnly: true,
       userInfo: {
         username: {
           value: user.preferred_username || user.name,
@@ -70,6 +67,7 @@ class RowDetail extends Component {
 
   handleSave = async () => {
     const { userInfo } = this.state;
+    const { setReadonly } = this.props;
     const policiesFormData = this.UserInfoCard.submitEdit();
     const groupsFormData = this.UserGroupsCard.submitEdit();
     const groups = groupsFormData.map(group => group.name);
@@ -87,10 +85,7 @@ class RowDetail extends Component {
     } catch (e) {
       return false;
     }
-
-    this.setState({
-      readOnly: true,
-    });
+    setReadonly(true);
     return false;
   };
 
@@ -128,8 +123,9 @@ class RowDetail extends Component {
       return (<div />);
     }
     const {
-      readOnly, userInfo, policies, groups,
+      userInfo, policies, groups,
     } = this.state;
+    const { readOnly } = this.props;
     const name = this.props.user.preferred_username || this.props.user.name;
     return (
       <div className="row-detail">
@@ -174,6 +170,7 @@ class RowDetail extends Component {
 }
 
 RowDetail.propTypes = {
+  readOnly: PropTypes.bool,
   user: PropTypes.shape({
     name: PropTypes.string,
     preferred_username: PropTypes.string,
@@ -182,11 +179,14 @@ RowDetail.propTypes = {
     policies: PropTypes.array,
     groups_with_policies: PropTypes.array,
   }),
+  setReadonly: PropTypes.func,
   loadUserList: PropTypes.func,
 };
 
 RowDetail.defaultProps = {
+  readOnly: false,
   user: null,
+  setReadonly: () => {},
   loadUserList: () => {},
 };
 

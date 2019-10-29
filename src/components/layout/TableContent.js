@@ -1,5 +1,7 @@
 import React, { PureComponent } from 'react';
-import { Col, Pagination, Row } from 'antd';
+import {
+  Col, Modal, Pagination, Row,
+} from 'antd';
 import { find, cloneDeep } from 'lodash';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -16,6 +18,8 @@ class TableContent extends PureComponent {
     this.state = {
       selectedUserIndex: 0,
       users: [],
+      visible: false,
+      userContentReadOnly: true,
     };
   }
 
@@ -117,9 +121,23 @@ class TableContent extends PureComponent {
             <DataTable
               dataSource={this.state.users}
               onRowSelect={(index) => {
-                this.setState({
-                  selectedUserIndex: index,
-                });
+                if (!this.state.userContentReadOnly) {
+                  Modal.confirm({
+                    title: 'Are you sure you want to discard the changes?',
+                    okText: 'Yes',
+                    cancelText: 'Cancel',
+                    onOk: () => {
+                      this.setState({
+                        selectedUserIndex: index,
+                        userContentReadOnly: true,
+                      });
+                    },
+                  });
+                } else {
+                  this.setState({
+                    selectedUserIndex: index,
+                  });
+                }
               }}
               selectedIndex={this.state.selectedUserIndex}
               loading={this.props.loading}
@@ -139,6 +157,8 @@ class TableContent extends PureComponent {
               />
             </div>
             <RowDetail
+              readOnly={this.state.userContentReadOnly}
+              setReadonly={(readOnly) => this.setState({ userContentReadOnly: readOnly })}
               user={selectedUser}
               key={JSON.stringify(selectedUser)}
             />
