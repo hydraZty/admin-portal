@@ -112,6 +112,9 @@ class AddUserModal extends Component {
 
   handleSubmitSecondStep () {
     const policies = this.assignPermissionForm.handleSubmit();
+    if (!policies) {
+      return;
+    }
     this.setState(prevState => ({
       policies,
       step: prevState.step + 1,
@@ -120,6 +123,9 @@ class AddUserModal extends Component {
 
   async handleSubmitThirdStep () {
     const groups = this.joinGroupsForm.handleSubmit();
+    if (!groups) {
+      return;
+    }
     const policies = formatPolicies(this.state.policies);
     const content = {
       users: this.state.users,
@@ -127,15 +133,11 @@ class AddUserModal extends Component {
       groups: groups.map(group => group.name),
     };
 
-    try {
-      await arborist.post('/users', content);
-      this.props.loadUserList();
-      this.props.closeModal();
-      return false;
-    } catch (e) {
-      return false;
-    }
+    await arborist.post('/users', content);
+    this.props.loadUserList();
+    this.props.closeModal();
   }
+
 
   render () {
     return (

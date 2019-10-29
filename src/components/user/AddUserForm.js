@@ -5,6 +5,7 @@ import {
 import PropTypes from 'prop-types';
 
 import './AddUserForm.less';
+import { fence } from '../../utils/API';
 
 let id = 0;
 
@@ -43,10 +44,31 @@ class AddUser extends React.Component {
     return err;
   });
 
+  remoteValidator = async (rule, value, callback) => {
+    if (!value) {
+      callback();
+      return;
+    }
+    try {
+      const response = await fence.get(`admin/user/${value}`);
+      if (response) {
+        callback('Username exists in Fence');
+      }
+    } catch (e) {
+      if (e.response.status === 404) {
+        // Need return a callback, otherwise validator cannot respond
+        callback();
+      }
+    }
+  };
+
   render () {
     const { form, ...other } = this.props;
     const { getFieldDecorator, getFieldValue } = form;
-    getFieldDecorator('keys', { initialValue: [] });
+    getFieldDecorator('keys', {
+      initialValue: [],
+      validateFirst: true,
+    });
     const keys = getFieldValue('keys');
     if (keys.length === 0) {
       this.add();
@@ -56,6 +78,10 @@ class AddUser extends React.Component {
       required: true,
       whitespace: true,
       message: 'Required',
+    };
+
+    const existRule = {
+      validator: this.remoteValidator,
     };
 
     const formItems = keys.map((key, index) => (
@@ -70,8 +96,8 @@ class AddUser extends React.Component {
               User Name
               <Row>
                 {getFieldDecorator(`users[${index}].name`, {
-                  validateTrigger: ['onChange', 'onBlur'],
-                  rules: [requireRule],
+                  validateTrigger: ['onSubmit', 'onBlur'],
+                  rules: [requireRule, existRule],
                 })(<Input style={{ width: '100%' }} id={`name-${index}`} />)}
               </Row>
             </label>
@@ -107,9 +133,9 @@ class AddUser extends React.Component {
               Email Address
               {getFieldDecorator(`users[${index}].email`, {
                 validateTrigger: ['onChange', 'onBlur'],
-                rules: [requireRule, {
+                rules: [{
                   type: 'email',
-                  message: 'The input is not valid E-mail!',
+                  message: 'Invalid email format',
                 }],
               })(<Input style={{ width: '100%' }} id={`email-${index}`} />)}
             </label>

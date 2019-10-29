@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   Form, Icon, Row, Col, Select, Tag, TreeSelect,
+  Modal,
 } from 'antd';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
@@ -26,7 +27,18 @@ class AssignPermission extends React.Component {
     this.setState({ results });
   };
 
-  handleSubmit = () => this.state.policyData;
+  handleSubmit = () => {
+    const { role, resources } = this.props.form.getFieldsValue();
+    if (role || resources) {
+      Modal.warning({
+        title: 'Prevent omissions',
+        content: 'Please add or clear the contents of the input',
+      });
+      return false;
+    }
+    return this.state.policyData;
+  };
+
 
   removeRole = (index) => {
     this.state.policyData.splice(index, 1);
@@ -94,8 +106,8 @@ class AssignPermission extends React.Component {
         disabled={disable}
         disableCheckbox={!!item.namespace}
       >
-        { item.children && item.children.length > 0 ?
-          this.renderTreeNodes(item.children, disableChildren) : null }
+        {item.children && item.children.length > 0 ?
+          this.renderTreeNodes(item.children, disableChildren) : null}
       </TreeSelect.TreeNode>
     );
   });
@@ -117,10 +129,12 @@ class AssignPermission extends React.Component {
               <Form.Item className="assign-permission-form__form-item">
                 {getFieldDecorator('role', {
                   rules: [{ required: true, message: 'Select role' }],
+                  validateTrigger: [],
                 })(
                   <Select
                     labelInValue
                     showSearch
+                    allowClear
                     style={{ width: '95%' }}
                     placeholder="Select role"
                   >
@@ -138,9 +152,8 @@ class AssignPermission extends React.Component {
             <Col span={14}>
               <Form.Item className="assign-permission-form__form-item">
                 {getFieldDecorator('resources', {
-                  rules: [
-                    { required: false, type: 'array' },
-                  ],
+                  rules: [{ required: false, type: 'array' }],
+                  validateTrigger: [],
                 })(
                   <TreeSelect
                     style={{ width: '100%' }}

@@ -1,11 +1,12 @@
 import React from 'react';
 import {
-  Form, Icon, Row, Col, Select, Tag,
+  Form, Icon, Row, Col, Select, Tag, Modal,
 } from 'antd';
 import PropTypes from 'prop-types';
 
 import './JoinGroupsForm.less';
 import { formatResourceName } from '../../utils/util';
+
 
 class JoinGroups extends React.Component {
   constructor (props) {
@@ -19,7 +20,18 @@ class JoinGroups extends React.Component {
     this.props.onRef(this);
   }
 
-  handleSubmit = () => this.state.groupData;
+  handleSubmit = () => {
+    const { group } = this.props.form.getFieldsValue();
+    if (group) {
+      Modal.warning({
+        title: 'Prevent omissions',
+        content: 'Please add or clear the contents of the input',
+      });
+      return false;
+    }
+
+    return this.state.groupData;
+  };
 
   AddGroup = () => {
     this.props.form.validateFields((err, values) => {
@@ -61,16 +73,18 @@ class JoinGroups extends React.Component {
               <Form.Item className="join-groups-form__form-item">
                 {getFieldDecorator('group', {
                   rules: [{ required: true, message: 'Required' }],
+                  validateTrigger: [],
                 })(
                   <Select
                     labelInValue
                     showSearch
+                    allowClear
                     showArrow={false}
                     style={{ width: '98%' }}
                     placeholder="Enter group name keyword"
                   >
                     {filteredGroupOptions.map(
-                      r => <Select.Option value={r.name}>{r.name}</Select.Option>,
+                      r => <Select.Option key={r.name} value={r.name}>{r.name}</Select.Option>,
                     )}
                   </Select>,
                 )}
@@ -80,7 +94,7 @@ class JoinGroups extends React.Component {
             <Col span={2} className="join-groups-form__button-col">
               <div
                 role="presentation"
-                className="icon-wrapper"
+                className="join-groups-form__icon-wrapper"
                 onClick={this.AddGroup}
                 onKeyPress={this.AddGroup}
               >
@@ -93,7 +107,7 @@ class JoinGroups extends React.Component {
         <Row className="join-groups-form__result" key={group.name}>
           <Col span={22}>
             {group.name}
-            { readOnly && group.policies && group.policies.map((row) => (
+            {readOnly && group.policies && group.policies.map((row) => (
               <Row className="join-groups-form__list-row" key={`group-role-list-${row.role}`}>
                 <Col span={2} className="join-groups-form__line-wrapper">
                   <hr className="join-groups-form__horizontal-line" />
